@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz & Révision — Iridologie | Académie ÉLYSENS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vert:   #0C2613;
+    --sauge:  #9EC8B0;
+    --beige:  #F2EDE4;
+    --or:     #FFBD46;
+    --noir:   #1E1E1E;
+    --orange: #E0732E;
+    --blanc:  #FFFFFF;
+    --border: #D4C9B8;
+    --muted:  #6B6B5A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--beige);
+    color: var(--noir);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--vert);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo {
+    flex-shrink: 0;
+  }
+  .logo svg { display: block; }
+  .header-text h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blanc);
+  }
+  .header-text p {
+    font-size: 12px;
+    color: var(--sauge);
+    margin-top: 2px;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 28px 16px 60px;
+  }
+
+  .intro {
+    background: var(--blanc);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    border-left: 4px solid var(--sauge);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .intro strong { color: var(--vert); }
+
+  /* SYSTÈME */
+  .systeme {
+    margin-bottom: 28px;
+  }
+  .systeme-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--vert);
+    padding: 10px 0 8px;
+    border-bottom: 2px solid var(--sauge);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .systeme-num {
+    background: var(--vert);
+    color: var(--or);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: .5px;
+  }
+
+  /* MODULE CARD */
+  .module-card {
+    background: var(--blanc);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 1px 6px rgba(12,38,19,.07);
+    flex-wrap: wrap;
+  }
+  .module-info { flex: 1; min-width: 200px; }
+  .module-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .module-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--vert);
+  }
+  .module-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* BOUTON QUIZ */
+  .btn-quiz {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--or);
+    color: var(--vert);
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    transition: background .18s;
+    white-space: nowrap;
+  }
+  .btn-quiz:hover { background: #E0A030; }
+
+  /* BIENTÔT */
+  .btn-soon {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--border);
+    color: var(--muted);
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    cursor: default;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  @media(max-width: 500px) {
+    .module-card { flex-direction: column; align-items: flex-start; }
+    .btn-quiz, .btn-soon { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="22,2 42,22 22,42 2,22" fill="#FFBD46"/>
+      <text x="13" y="26" font-family="Cormorant Garamond,serif" font-size="14" font-weight="700" fill="#0C2613" transform="rotate(-12,13,26)">A</text>
+      <text x="23" y="30" font-family="Cormorant Garamond,serif" font-size="14" font-weight="700" fill="#0C2613" transform="rotate(-12,23,30)">É</text>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>Quiz & Révision</h1>
+    <p>Académie ÉLYSENS — Iridologie</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro">
+    <strong>Consigne :</strong> Sélectionne le quiz correspondant à ton module de cours.
+    Consulte ton cahier avant de répondre à chaque question.
+    Ta progression est sauvegardée automatiquement.
+  </div>
+
+  <!-- IRIDOLOGIE -->
+  <div class="systeme">
+    <div class="systeme-title">
+      <span class="systeme-num">01</span>
+      Iridologie
+    </div>
+
+    <div class="module-card">
+      <div class="module-info">
+        <div class="module-num">Module 1</div>
+        <div class="module-name">Les Fondements de la Lecture Irienne</div>
+        <div class="module-desc">45 questions · Contre-indications et sécurité, historique, la base, l'œil et la pupille, la coloration, zones et stades</div>
+      </div>
+      <a class="btn-quiz" href="Quiz_Iridologie_Module1_ELYSENS_FINAL.html">
+        ▶ Commencer
+      </a>
+    </div>
+
+    <div class="module-card">
+      <div class="module-info">
+        <div class="module-num">Module 2</div>
+        <div class="module-name">La Cartographie et les Symboles</div>
+        <div class="module-desc">Cartes iriennes · Colonne vertébrale · Formes de la pupille · Signes du centre vers la périphérie — Bientôt disponible</div>
+      </div>
+      <span class="btn-soon">⏳ À venir</span>
+    </div>
+
+    <div class="module-card">
+      <div class="module-info">
+        <div class="module-num">Module 3</div>
+        <div class="module-name">Le Bilan et les Quatre Principes de Base</div>
+        <div class="module-desc">Bientôt disponible</div>
+      </div>
+      <span class="btn-soon">⏳ À venir</span>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  © 2026 Académie ÉLYSENS — Centre Cosmique LB Inc. — Espace Élysens, Shefford QC
+</footer>
+
+</body>
+</html>
