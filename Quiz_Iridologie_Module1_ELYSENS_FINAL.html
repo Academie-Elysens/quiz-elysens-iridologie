@@ -412,9 +412,9 @@ const SVGS = {
 <text x="380" y="18" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="10.5" fill="#9EC8B0" opacity=".7" letter-spacing="2">ZONES · FIBRES · STADES</text>
 </svg>`,
 };
-
+ 
 const QTHEM = [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6];
-const SCRIPT_URL = "REPLACE_WITH_GOOGLE_SCRIPT_URL";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzA03oqfYM1tQxfLbGJspMlh404TRGBur7n7SRALGDnni4Sj9s_2g0jOrv8Ok5sreI/exec";
 const PTS = 100/45;
 const CORRECT_ANS=[
 "Elle te montre l'état général des tissus : une météo du corps, plutôt qu'un bulletin précis, à vérifier avec la personne que tu accompagnes.",
@@ -510,7 +510,7 @@ const QS=[
 {id:44,q:"Dans quel ordre le rétablissement se ferait-il, selon la loi de Hering évoquée dans ce cahier ?",ok:"C",ch:[{l:"A",t:"1.1.4 Comment orienter avec justesse"},{l:"B",t:"1.5.7 Les colorations diffuses : orangée (ou rouille), brune et jaune"},{l:"C",t:"1.6.4 Les quatre stades de l'activité tissulaire"},{l:"D",t:"1.2.6 Une traversée de l'Atlantique"},{l:"E",t:"1.4.5 Ce que révèle la pupille"}]},
 {id:45,q:"Que détermine l'iridologie, selon la tradition, à propos d'un déséquilibre tissulaire ?",ok:"B",ch:[{l:"A",t:"1.2.2 Les premiers regards"},{l:"B",t:"1.6.4 Les quatre stades de l'activité tissulaire"},{l:"C",t:"1.1.2 Le champ précis de la lecture irienne"},{l:"D",t:"1.5.2 L'homogénéité, premier repère"},{l:"E",t:"1.4.10 L'iris et la sclérotique"}]}
 ];
-
+ 
 const LS="elysens_quiz_irido_m1_v1";
 let S={name:"",email:"",cur:0,done:false,score:0,
 ans:Array(45).fill(0).map(()=>({txt:"",mcq:null,ok:false}))};
@@ -562,9 +562,10 @@ let fb="";
 if(locked){
 const validAnsList = q.oks || [q.ok];
 const sectList = validAnsList.map(l=>q.ch.find(c=>c.l===l).t).join(" — ou — ");
+const cAns=CORRECT_ANS[i];
 fb=ans.ok
-?`<div class="fb ok show">✅ Bonne réponse ! Section : <strong>${sectList}</strong></div>`
-:`<div class="fb ko show">❌ La bonne réponse est : <strong>${sectList}</strong><br><span style="font-weight:400;font-size:13px;display:block;margin-top:6px;opacity:.9">La réponse verbatim complète sera visible dans le corrigé, une fois le quiz soumis.</span></div>`;
+?`<div class="fb ok show">✅ Bonne réponse ! Section : <strong>${sectList}</strong><br><span style="font-weight:400;font-size:13px;display:block;margin-top:6px;opacity:.9">📖 Réponse attendue : ${cAns}</span></div>`
+:`<div class="fb ko show">❌ La bonne réponse est : <strong>${sectList}</strong><br><span style="font-weight:400;font-size:13px;display:block;margin-top:6px;opacity:.9">📖 Réponse attendue : ${cAns}</span></div>`;
 }
 const isLast=i===44;
 const nxt=isLast
@@ -738,3 +739,4 @@ window.scrollTo(0,0);
 </script>
 </body>
 </html>
+ 
