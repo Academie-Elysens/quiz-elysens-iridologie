@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — Iridologie M2 | Académie ÉLYSENS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+--vert: #0C2613;
+--sauge: #9EC8B0;
+--beige: #F2EDE4;
+--or: #FFBD46;
+--noir: #1E1E1E;
+--orange: #E0732E;
+--rouge: #8C0009;
+--blanc: #FFFFFF;
+--sauge-l: #E8F4EE;
+--border: #D4C9B8;
+--muted: #6B6B5A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--beige);
+color:var(--noir);font-size:15px;min-height:100vh}
+.hdr{background:var(--vert);padding:16px 28px;display:flex;
+align-items:center;justify-content:space-between;
+position:sticky;top:0;z-index:100;
+box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.hdr-brand{display:flex;align-items:center;gap:12px}
+.hdr-logo{width:36px;height:36px;border-radius:50%;
+background:var(--or);display:flex;align-items:center;justify-content:center;
+font-family:'Cormorant Garamond',serif;font-weight:700;font-size:16px;color:var(--vert)}
+.hdr-text h1{font-family:'Cormorant Garamond',serif;font-size:17px;
+font-weight:600;color:var(--blanc);letter-spacing:.3px}
+.hdr-text p{font-size:11px;color:var(--sauge);margin-top:1px}
+.score-badge{background:var(--or);color:var(--vert);padding:6px 16px;
+border-radius:20px;font-weight:700;font-size:13px;
+font-family:'Outfit',sans-serif;min-width:85px;text-align:center;
+white-space:nowrap}
+.prog-wrap{background:var(--blanc);padding:8px 28px;
+border-bottom:1px solid var(--border);display:none}
+.prog-bar-bg{background:var(--border);border-radius:10px;height:6px;overflow:hidden}
+.prog-bar{background:linear-gradient(90deg,var(--vert),var(--sauge));
+height:100%;border-radius:10px;transition:width .4s}
+.prog-info{display:flex;justify-content:space-between;
+font-size:11px;color:var(--muted);margin-top:3px}
+main{max-width:760px;margin:0 auto;padding:28px 16px 80px}
+.screen{display:none}.screen.active{display:block}
+.card{background:var(--blanc);border-radius:14px;padding:32px;
+box-shadow:0 2px 16px rgba(12,38,19,.09)}
+.welcome-wrap{max-width:540px;margin:24px auto}
+.brand-pill{display:inline-flex;align-items:center;gap:7px;
+background:var(--vert);color:var(--blanc);padding:4px 14px;
+border-radius:20px;font-size:11px;font-weight:600;
+letter-spacing:.6px;margin-bottom:16px}
+.brand-pill span{background:var(--or);color:var(--vert);
+padding:1px 7px;border-radius:10px;font-size:10px}
+.welcome-wrap h2{font-family:'Cormorant Garamond',serif;
+font-size:28px;font-weight:700;color:var(--vert);margin-bottom:4px}
+.welcome-wrap .sub{font-size:13.5px;color:var(--muted);margin-bottom:22px}
+.instr{background:var(--sauge-l);border-left:4px solid var(--sauge);
+border-radius:0 10px 10px 0;padding:14px 16px;
+margin-bottom:18px;font-size:13.5px;line-height:1.8}
+.instr strong{color:var(--vert)}
+.instr ul{margin-left:18px;margin-top:4px}
+.instr li{margin-bottom:2px}
+.alert{border-left:4px solid var(--orange);background:#FEF6EC;
+border-radius:0 10px 10px 0;padding:12px 16px;
+font-size:13px;color:#5A2E00;margin-bottom:22px;line-height:1.6}
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:600;font-size:13px;
+color:var(--vert);margin-bottom:5px}
+.field input{width:100%;padding:10px 13px;
+border:1.5px solid var(--border);border-radius:9px;
+font-family:'Outfit',sans-serif;font-size:14px;transition:border .2s;
+background:var(--beige)}
+.field input:focus{outline:none;border-color:var(--vert);background:var(--blanc)}
+.err{color:var(--rouge);font-size:13px;margin-bottom:10px;display:none}
+.q-card{background:var(--blanc);border-radius:14px;padding:0;
+box-shadow:0 2px 14px rgba(12,38,19,.08);margin-bottom:20px;overflow:hidden}
+.q-num{display:inline-block;background:var(--vert);color:var(--blanc);
+font-size:11px;font-weight:700;padding:3px 12px;
+border-radius:10px;margin-bottom:12px;letter-spacing:.5px}
+.q-text{font-family:'Cormorant Garamond',serif;font-size:18px;
+font-weight:600;color:var(--vert);line-height:1.45;margin-bottom:22px}
+.part-label{font-size:11px;font-weight:700;letter-spacing:.7px;
+color:var(--muted);text-transform:uppercase;margin-bottom:5px}
+.part-hint{font-size:14.5px;color:var(--noir);
+margin-bottom:9px;font-style:italic}
+textarea{width:100%;min-height:105px;padding:11px 13px;
+border:1.5px solid var(--border);border-radius:9px;
+font-family:'Outfit',sans-serif;font-size:15px;
+resize:vertical;transition:border .2s;
+background:var(--beige);line-height:1.65}
+textarea:focus{outline:none;border-color:var(--vert);background:var(--blanc)}
+.autosave{font-size:11px;color:var(--muted);margin-top:3px}
+.sep{border:none;border-top:1.5px solid var(--border);margin:22px 0}
+.choice{display:flex;align-items:flex-start;gap:11px;
+padding:11px 14px;border:1.5px solid var(--border);
+border-radius:10px;margin-bottom:8px;cursor:pointer;
+transition:all .15s;background:var(--blanc);user-select:none}
+.choice:hover:not(.locked){border-color:var(--sauge);background:var(--sauge-l)}
+.choice.locked{cursor:default}
+.choice.is-correct{border-color:#2E7D32!important;background:#E8F5E9!important}
+.choice.is-wrong{border-color:var(--rouge)!important;background:#FDECEA!important}
+.choice.reveal{border-color:#2E7D32!important;background:#F1F8F1!important}
+.letter{flex-shrink:0;width:28px;height:28px;border-radius:50%;
+background:var(--beige);border:1.5px solid var(--border);
+font-weight:700;font-size:12px;display:flex;
+align-items:center;justify-content:center;
+color:var(--noir);transition:all .15s}
+.choice.is-correct .letter{background:#2E7D32;border-color:#2E7D32;color:#fff}
+.choice.is-wrong .letter{background:var(--rouge);border-color:var(--rouge);color:#fff}
+.choice.reveal .letter{background:#2E7D32;border-color:#2E7D32;color:#fff}
+.choice-text{font-size:15px;line-height:1.5;padding-top:4px;color:var(--noir)}
+.fb{padding:11px 14px;border-radius:9px;margin-top:10px;
+font-size:13.5px;font-weight:600;display:none;line-height:1.5}
+.fb.show{display:block}
+.fb.ok{background:#E8F5E9;color:#1B5E20;border-left:4px solid #2E7D32}
+.fb.ko{background:#FDECEA;color:#7F1D1D;border-left:4px solid var(--rouge)}
+.btn{display:inline-flex;align-items:center;justify-content:center;
+gap:7px;padding:11px 24px;border:none;border-radius:9px;
+font-family:'Outfit',sans-serif;font-weight:600;font-size:14px;
+cursor:pointer;transition:all .18s;letter-spacing:.2px}
+.btn-vert{background:var(--vert);color:var(--blanc)}
+.btn-vert:hover{background:#0A1E0F}
+.btn-or{background:var(--or);color:var(--vert)}
+.btn-or:hover{background:#E0A030}
+.btn-outline{background:var(--blanc);color:var(--vert);
+border:1.5px solid var(--vert)}
+.btn-outline:hover{background:var(--sauge-l)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.nav-row{display:flex;gap:10px;justify-content:space-between;
+align-items:center;flex-wrap:wrap;margin-top:20px}
+.res-wrap{max-width:580px;margin:28px auto}
+.score-ring{width:148px;height:148px;border-radius:50%;
+border:8px solid var(--vert);margin:20px auto;
+display:flex;flex-direction:column;
+align-items:center;justify-content:center;
+background:var(--sauge-l)}
+.score-pct{font-family:'Cormorant Garamond',serif;
+font-size:42px;font-weight:700;color:var(--vert)}
+.score-lbl{font-size:11px;color:var(--muted);margin-top:1px}
+.mention{font-family:'Cormorant Garamond',serif;
+font-size:22px;font-weight:600;color:var(--vert);
+margin:14px 0;text-align:center}
+.breakdown{background:var(--beige);border-radius:10px;padding:16px;
+margin:16px 0;font-size:13.5px;line-height:2.1}
+.send-st{font-size:13px;margin-top:12px;text-align:center}
+.s-wait{color:var(--muted)}.s-ok{color:#2E7D32;font-weight:600}
+.s-err{color:var(--rouge)}
+.corrige-item{background:var(--blanc);border-radius:12px;padding:22px;
+margin-bottom:16px;box-shadow:0 1px 8px rgba(12,38,19,.07)}
+.corrige-qnum{display:inline-block;font-size:11px;font-weight:700;
+letter-spacing:.5px;padding:2px 10px;border-radius:10px;
+margin-bottom:10px}
+.corrige-qnum.ok{background:#E8F5E9;color:#1B5E20}
+.corrige-qnum.ko{background:#FDECEA;color:#7F1D1D}
+.corrige-qnum.skip{background:#F5F5F5;color:#666}
+.corrige-qtxt{font-family:'Cormorant Garamond',serif;font-size:16px;
+font-weight:600;color:var(--vert);margin-bottom:14px;line-height:1.4}
+.corrige-block{margin-bottom:12px}
+.corrige-label{font-size:11px;font-weight:700;letter-spacing:.5px;
+color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.corrige-answer{background:var(--beige);border-radius:7px;padding:10px 12px;
+font-size:13.5px;line-height:1.6;color:var(--noir)}
+.corrige-mcq-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.mcq-chip{padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:600}
+.mcq-correct{background:#E8F5E9;color:#1B5E20;border:1px solid #A5D6A7}
+.mcq-wrong{background:#FDECEA;color:#7F1D1D;border:1px solid #FFCDD2}
+.mcq-good{background:#E8F5E9;color:#1B5E20;border:1.5px solid #2E7D32}
+@media print{
+.hdr,.prog-wrap,.nav-row,#btn-start,.btn{display:none!important}
+.screen{display:none!important}
+#screen-corrige{display:block!important}
+body{background:#fff;font-size:12px}
+.corrige-item{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+main{padding:10px}
+}
+.q-visual{width:100%;height:110px;overflow:hidden;border-radius:10px 10px 0 0;
+margin:-26px -26px 20px -26px;width:calc(100% + 52px)}
+.q-visual svg{width:100%;height:110px;display:block}
+.q-theme-label{display:flex;align-items:center;gap:8px;
+margin-bottom:16px;padding:6px 12px;
+background:var(--vert);border-radius:6px;
+font-size:11px;font-weight:700;letter-spacing:.6px;
+color:var(--or);text-transform:uppercase;
+width:fit-content}
+.q-card{overflow:hidden;padding-top:0}
+.q-card-inner{padding:20px 26px 26px}
+@media(max-width:600px){
+main{padding:12px 8px 70px}
+.q-card{padding:0}
+.q-card-inner{padding:14px 14px 18px}
+.card{padding:18px}
+.hdr{padding:12px 14px}
+.hdr-text h1{font-size:14px}
+.hdr-text p{font-size:10px}
+.q-text{font-size:16px}
+.choice{padding:10px 12px}
+.choice-text{font-size:14px}
+.btn{padding:12px 16px;font-size:13px}
+.nav-row{gap:8px}
+.q-visual{height:80px;margin:-0 -0 16px -0;width:100%;border-radius:10px 10px 0 0}
+.q-visual svg{height:80px}
+.welcome-wrap{margin:12px auto}
+}
+</style>
+</head>
+<body>
+<header class="hdr">
+<div class="hdr-brand">
+<div class="hdr-logo">
+<svg width="42" height="42" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg">
+<polygon points="21,2 40,21 21,40 2,21" fill="#FFBD46"/>
+<polygon points="21,4 38,21 21,38 4,21" fill="none" stroke="#0C2613" stroke-width="1" opacity=".3"/>
+<text x="13" y="24" font-family="Cormorant Garamond,serif" font-size="13" font-weight="700" fill="#0C2613" transform="rotate(-12,13,24)">A</text>
+<text x="22" y="28" font-family="Cormorant Garamond,serif" font-size="13" font-weight="700" fill="#0C2613" transform="rotate(-12,22,28)">É</text>
+</svg>
+</div>
+<div class="hdr-text">
+<h1>Académie ÉLYSENS</h1>
+<p>Iridologie — Module 2 · 40 questions</p>
+</div>
+</div>
+<div class="score-badge" id="live-score">— / 100</div>
+</header>
+<div class="prog-wrap" id="prog-wrap">
+<div class="prog-bar-bg"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+<div class="prog-info">
+<span id="prog-text">Question 1 / 40</span>
+<span id="prog-pct">0 %</span>
+</div>
+</div>
+<main>
+<div class="screen active" id="screen-welcome">
+<div class="welcome-wrap">
+<div class="card">
+<div class="brand-pill">ACADÉMIE <span>ÉLYSENS</span></div>
+<h2>Quiz de révision</h2>
+<p class="sub">Iridologie · Module 2 · La cartographie et les symboles · 40 questions</p>
+<div class="instr">
+<strong>Consignes :</strong>
+<ul>
+<li>Relisez la section correspondante dans votre cahier avant de répondre.</li>
+<li><strong>1‑A</strong> — Répondez avec vos propres mots.</li>
+<li><strong>1‑B</strong> — Sélectionnez la section où vous avez trouvé l'information.</li>
+<li>Vous pouvez quitter et reprendre à tout moment — votre progression est sauvegardée.</li>
+</ul>
+</div>
+<div class="alert">
+⚠️ <strong>Note importante :</strong> La note est calculée à partir des questions 1‑B.
+Les réponses 1‑A sont vérifiées par l'enseignant. Une réponse absente ou
+insuffisante entraîne une pénalité pouvant aller jusqu'à <strong>50 % de la note finale</strong>.
+Ces questionnaires constituent votre meilleure préparation à l'examen de fin de système.
+</div>
+<div class="field">
+<label for="inp-name">Nom complet *</label>
+<input type="text" id="inp-name" placeholder="Prénom Nom">
+</div>
+<div class="field">
+<label for="inp-email">Adresse courriel *</label>
+<input type="email" id="inp-email" placeholder="votre@courriel.com">
+</div>
+<div class="err" id="err-msg">Veuillez entrer votre nom et une adresse courriel valide.</div>
+<button class="btn btn-vert" id="btn-start" style="width:100%;padding:13px;font-size:15px">
+▶&nbsp;&nbsp;Commencer le quiz
+</button>
+</div>
+</div>
+</div>
+<div class="screen" id="screen-quiz">
+<div id="q-container"></div>
+</div>
+<div class="screen" id="screen-results">
+<div class="res-wrap">
+<div class="card" style="text-align:center">
+<div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--vert)">
+Quiz terminé !
+</div>
+<div class="score-ring">
+<div class="score-pct" id="res-pct">—</div>
+<div class="score-lbl">sur 100</div>
+</div>
+<div class="mention" id="res-mention"></div>
+<div class="breakdown" id="res-breakdown" style="text-align:left"></div>
+<div class="alert" style="text-align:left">
+⚠️ Cette note sera ajustée par l'enseignant après révision des réponses écrites (1‑A).
+Une réponse insuffisante peut entraîner une pénalité jusqu'à 50 %.
+</div>
+<div id="send-status" class="send-st s-wait">⏳ Envoi des résultats en cours…</div>
+<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+<button class="btn btn-vert" style="flex:1;min-width:180px" onclick="showCorrige()">
+📋&nbsp; Voir le corrigé complet
+</button>
+<button class="btn btn-outline" style="flex:1;min-width:180px" onclick="window.print()">
+🖨&nbsp; Imprimer / PDF
+</button>
+</div>
+<button class="btn" onclick="restartQuiz()" style="width:100%;margin-top:10px;background:#fff;color:#8C0009;border:1.5px solid #8C0009;font-family:Outfit,sans-serif;font-weight:600;font-size:14px;padding:11px;border-radius:9px;cursor:pointer">
+🔄&nbsp; Recommencer le quiz à zéro
+</button>
+</div>
+</div>
+</div>
+<div class="screen" id="screen-corrige">
+<div style="max-width:760px;margin:0 auto">
+<div class="card" style="margin-bottom:20px">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+<div>
+<div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--vert)">
+Corrigé complet — Iridologie M2
+</div>
+<div style="font-size:13px;color:var(--muted);margin-top:3px" id="corrige-info"></div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn btn-outline" style="font-size:13px;padding:8px 16px" onclick="show('screen-results')">
+← Retour aux résultats
+</button>
+<button class="btn btn-vert" style="font-size:13px;padding:8px 16px" onclick="window.print()">
+🖨 Imprimer
+</button>
+</div>
+</div>
+</div>
+<div id="corrige-list"></div>
+</div>
+</div>
+<div id="float-submit" style="display:none;position:fixed;bottom:20px;right:20px;z-index:999">
+<button onclick="soumettreMaintenant()" style="
+background:var(--orange);color:#fff;
+border:none;border-radius:30px;
+padding:13px 22px;
+font-family:Outfit,sans-serif;font-weight:700;font-size:14px;
+cursor:pointer;
+box-shadow:0 4px 16px rgba(224,115,46,.45);
+transition:all .2s">
+✔ Soumettre maintenant
+</button>
+</div>
+</main>
+<script>
+const SVGS = {
+1: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 110" preserveAspectRatio="xMidYMid slice">
+<rect width="760" height="110" fill="#0C2613"/>
+<g transform="translate(380,61) scale(0.7) translate(-380,-50)"><line x1="150" y1="50" x2="610" y2="50" stroke="#9EC8B0" stroke-width="1.4" opacity=".4"/><circle cx="200" cy="50" r="26" fill="none" stroke="#9EC8B0" stroke-width="1.6" opacity=".55"/><circle cx="200" cy="50" r="8.3" fill="#9EC8B0" opacity=".25"/><line x1="209.9" y1="50.0" x2="223.9" y2="50.0" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="208.6" y1="54.9" x2="220.7" y2="62.0" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="204.9" y1="58.6" x2="212.0" y2="70.7" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="200.0" y1="59.9" x2="200.0" y2="73.9" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="195.1" y1="58.6" x2="188.0" y2="70.7" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="191.4" y1="54.9" x2="179.3" y2="62.0" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="190.1" y1="50.0" x2="176.1" y2="50.0" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="191.4" y1="45.1" x2="179.3" y2="38.0" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="195.1" y1="41.4" x2="188.0" y2="29.3" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="200.0" y1="40.1" x2="200.0" y2="26.1" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="204.9" y1="41.4" x2="212.0" y2="29.3" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="208.6" y1="45.1" x2="220.7" y2="38.0" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><circle cx="200" cy="50" r="3" fill="#9EC8B0" opacity=".8"/><circle cx="320" cy="50" r="26" fill="none" stroke="#9EC8B0" stroke-width="1.6" opacity=".55"/><circle cx="320" cy="50" r="8.3" fill="#9EC8B0" opacity=".25"/><line x1="329.9" y1="50.0" x2="343.9" y2="50.0" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="329.1" y1="53.8" x2="342.1" y2="59.2" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="327.0" y1="57.0" x2="336.9" y2="66.9" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="323.8" y1="59.1" x2="329.2" y2="72.1" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="320.0" y1="59.9" x2="320.0" y2="73.9" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="316.2" y1="59.1" x2="310.8" y2="72.1" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="313.0" y1="57.0" x2="303.1" y2="66.9" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="310.9" y1="53.8" x2="297.9" y2="59.2" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="310.1" y1="50.0" x2="296.1" y2="50.0" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="310.9" y1="46.2" x2="297.9" y2="40.8" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="313.0" y1="43.0" x2="303.1" y2="33.1" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="316.2" y1="40.9" x2="310.8" y2="27.9" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="320.0" y1="40.1" x2="320.0" y2="26.1" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="323.8" y1="40.9" x2="329.2" y2="27.9" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="327.0" y1="43.0" x2="336.9" y2="33.1" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><line x1="329.1" y1="46.2" x2="342.1" y2="40.8" stroke="#9EC8B0" stroke-width="1" opacity="0.4"/><circle cx="320" cy="50" r="3" fill="#9EC8B0" opacity=".8"/><circle cx="440" cy="50" r="26" fill="none" stroke="#9EC8B0" stroke-width="1.6" opacity=".55"/><circle cx="440" cy="50" r="8.3" fill="#9EC8B0" opacity=".25"/><line x1="449.9" y1="50.0" x2="463.9" y2="50.0" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="449.4" y1="53.1" x2="462.7" y2="57.4" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="448.0" y1="55.8" x2="459.4" y2="64.1" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="445.8" y1="58.0" x2="454.1" y2="69.4" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="443.1" y1="59.4" x2="447.4" y2="72.7" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="440.0" y1="59.9" x2="440.0" y2="73.9" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="436.9" y1="59.4" x2="432.6" y2="72.7" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="434.2" y1="58.0" x2="425.9" y2="69.4" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="432.0" y1="55.8" x2="420.6" y2="64.1" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="430.6" y1="53.1" x2="417.3" y2="57.4" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="430.1" y1="50.0" x2="416.1" y2="50.0" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="430.6" y1="46.9" x2="417.3" y2="42.6" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="432.0" y1="44.2" x2="420.6" y2="35.9" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="434.2" y1="42.0" x2="425.9" y2="30.6" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="436.9" y1="40.6" x2="432.6" y2="27.3" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="440.0" y1="40.1" x2="440.0" y2="26.1" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="443.1" y1="40.6" x2="447.4" y2="27.3" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="445.8" y1="42.0" x2="454.1" y2="30.6" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="448.0" y1="44.2" x2="459.4" y2="35.9" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><line x1="449.4" y1="46.9" x2="462.7" y2="42.6" stroke="#9EC8B0" stroke-width="1" opacity="0.5"/><circle cx="440" cy="50" r="3" fill="#9EC8B0" opacity=".8"/><circle cx="560" cy="50" r="32" fill="none" stroke="#9EC8B0" stroke-width="1.6" opacity=".55"/><circle cx="560" cy="50" r="10.2" fill="#9EC8B0" opacity=".25"/><line x1="572.2" y1="50.0" x2="589.4" y2="50.0" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="571.7" y1="53.1" x2="588.4" y2="57.6" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="570.5" y1="56.1" x2="585.5" y2="64.7" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="568.6" y1="58.6" x2="580.8" y2="70.8" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="566.1" y1="60.5" x2="574.7" y2="75.5" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="563.1" y1="61.7" x2="567.6" y2="78.4" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="560.0" y1="62.2" x2="560.0" y2="79.4" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="556.9" y1="61.7" x2="552.4" y2="78.4" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="553.9" y1="60.5" x2="545.3" y2="75.5" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="551.4" y1="58.6" x2="539.2" y2="70.8" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="549.5" y1="56.1" x2="534.5" y2="64.7" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="548.3" y1="53.1" x2="531.6" y2="57.6" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="547.8" y1="50.0" x2="530.6" y2="50.0" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="548.3" y1="46.9" x2="531.6" y2="42.4" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="549.5" y1="43.9" x2="534.5" y2="35.3" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="551.4" y1="41.4" x2="539.2" y2="29.2" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="553.9" y1="39.5" x2="545.3" y2="24.5" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="556.9" y1="38.3" x2="552.4" y2="21.6" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="560.0" y1="37.8" x2="560.0" y2="20.6" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="563.1" y1="38.3" x2="567.6" y2="21.6" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="566.1" y1="39.5" x2="574.7" y2="24.5" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="568.6" y1="41.4" x2="580.8" y2="29.2" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="570.5" y1="43.9" x2="585.5" y2="35.3" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><line x1="571.7" y1="46.9" x2="588.4" y2="42.4" stroke="#9EC8B0" stroke-width="1" opacity="0.6000000000000001"/><circle cx="560" cy="50" r="3" fill="#FFBD46" opacity=".8"/><circle cx="140" cy="50" r="4" fill="#E0732E" opacity=".6"/><circle cx="620" cy="50" r="4" fill="#E0732E" opacity=".6"/></g>
+<text x="380" y="103" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="10" fill="#FFBD46" letter-spacing="2">L'HISTOIRE DES CARTES IRIENNES</text>
+</svg>`,
+2: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 110" preserveAspectRatio="xMidYMid slice">
+<rect width="760" height="110" fill="#0C2613"/>
+<g transform="translate(380,61) scale(0.7) translate(-380,-50)"><circle cx="380" cy="50" r="42" fill="none" stroke="#9EC8B0" stroke-width="1.6" opacity=".55"/><circle cx="380" cy="50" r="14" fill="none" stroke="#9EC8B0" stroke-width=".8" opacity=".35"/><circle cx="380" cy="50" r="22" fill="none" stroke="#9EC8B0" stroke-width=".8" opacity=".35"/><circle cx="380" cy="50" r="30" fill="none" stroke="#9EC8B0" stroke-width=".8" opacity=".35"/><circle cx="380" cy="50" r="36" fill="none" stroke="#9EC8B0" stroke-width=".8" opacity=".35"/><line x1="380.0" y1="36.0" x2="380.0" y2="8.0" stroke="#9EC8B0" stroke-width=".9" opacity=".4"/><circle cx="380.0" cy="2.0" r="1.8" fill="#FFBD46" opacity=".8"/><line x1="387.0" y1="37.9" x2="401.0" y2="13.6" stroke="#9EC8B0" stroke-width=".9" opacity=".4"/><circle cx="404.0" cy="8.4" r="1.8" fill="#FFBD46" opacity=".8"/><line x1="392.1" y1="43.0" x2="416.4" y2="29.0" stroke="#9EC8B0" stroke-width=".9" opacity=".4"/><circle cx="421.6" cy="26.0" r="1.8" fill="#FFBD46" opacity=".8"/><line x1="394.0" y1="50.0" x2="422.0" y2="50.0" stroke="#9EC8B0" stroke-width=".9" opacity=".4"/><circle cx="428.0" cy="50.0" r="1.8" fill="#FFBD46" opacity=".8"/><line x1="392.1" y1="57.0" x2="416.4" y2="71.0" stroke="#9EC8B0" stroke-width=".9" opacity=".4"/><circle cx="421.6" cy="74.0" r="1.8" fill="#FFBD46" opacity=".8"/><line x1="387.0" y1="62.1" x2="401.0" y2="86.4" stroke="#9EC8B0" stroke-width=".9" opacity=".4"/><circle cx="404.0" cy="91.6" r="1.8" fill="#FFBD46" opacity=".8"/><line x1="380.0" y1="64.0" x2="380.0" y2="92.0" stroke="#9EC8B0" stroke-width=".9" opacity=".4"/><circle cx="380.0" cy="98.0" r="1.8" fill="#FFBD46" opacity=".8"/><line x1="373.0" y1="62.1" x2="359.0" y2="86.4" stroke="#9EC8B0" stroke-width=".9" opacity=".4"/><circle cx="356.0" cy="91.6" r="1.8" fill="#FFBD46" opacity=".8"/><line x1="367.9" y1="57.0" x2="343.6" y2="71.0" stroke="#9EC8B0" stroke-width=".9" opacity=".4"/><circle cx="338.4" cy="74.0" r="1.8" fill="#FFBD46" opacity=".8"/><line x1="366.0" y1="50.0" x2="338.0" y2="50.0" stroke="#9EC8B0" stroke-width=".9" opacity=".4"/><circle cx="332.0" cy="50.0" r="1.8" fill="#FFBD46" opacity=".8"/><line x1="367.9" y1="43.0" x2="343.6" y2="29.0" stroke="#9EC8B0" stroke-width=".9" opacity=".4"/><circle cx="338.4" cy="26.0" r="1.8" fill="#FFBD46" opacity=".8"/><line x1="373.0" y1="37.9" x2="359.0" y2="13.6" stroke="#9EC8B0" stroke-width=".9" opacity=".4"/><circle cx="356.0" cy="8.4" r="1.8" fill="#FFBD46" opacity=".8"/><path d="M380,50 L380,14 A36,36 0 0,1 398,18.8 Z" fill="#FFBD46" opacity=".35"/><rect x="216" y="38" width="28" height="24" rx="3" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity=".4"/><rect x="266" y="38" width="28" height="24" rx="3" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity=".4"/><rect x="466" y="38" width="28" height="24" rx="3" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity=".4"/><rect x="516" y="38" width="28" height="24" rx="3" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity=".4"/><circle cx="180" cy="50" r="4" fill="#E0732E" opacity=".55"/><circle cx="580" cy="50" r="4" fill="#E0732E" opacity=".55"/></g>
+<text x="380" y="103" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="10" fill="#FFBD46" letter-spacing="2">LA CARTOGRAPHIE DE L'IRIS, SYSTÈME PAR SYSTÈME</text>
+</svg>`,
+3: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 110" preserveAspectRatio="xMidYMid slice">
+<rect width="760" height="110" fill="#0C2613"/>
+<g transform="translate(380,61) scale(0.7) translate(-380,-50)"><polyline points="100,50.0 104,54.7 108,55.8 112,52.6 116,47.3 120,44.1 124,45.4 128,50.1 132,54.8 136,55.8 140,52.5 144,47.3 148,44.1 152,45.4 156,50.2 160,54.8 164,55.8 168,52.4 172,47.2 176,44.1 180,45.5 184,50.3 188,54.9 192,55.8 196,52.3 200,47.1 204,44.1 208,45.6 212,50.4 216,54.9 220,55.7 224,52.2 228,47.0 232,44.1 236,45.6 240,50.5 244,55.0 248,55.7 252,52.1 256,46.9 260,44.0 264,45.7 268,50.6 272,55.1 276,55.7 280,52.0 284,46.8 288,44.0 292,45.8 296,50.7 300,55.1 304,55.6 308,51.9 312,46.7 316,44.0 320,45.8 324,50.8 328,55.2 332,55.6 336,51.8 340,46.6 344,44.0 348,45.9 352,50.9 356,55.2 360,55.6 364,51.7 368,46.6 372,44.0 376,46.0 380,51.0 384,55.3 388,55.5 392,51.6 396,46.5 400,44.0 404,46.1 408,51.1 412,55.3 416,55.5 420,51.5 424,46.4 428,44.0 432,46.1 436,51.2 440,55.4 444,55.5 448,51.4 452,46.3 456,44.0 460,46.2 464,51.3 468,55.4 472,55.4 476,51.3 480,46.2 484,44.0 488,46.3 492,51.4 496,55.4 500,55.4 504,51.2 508,46.2 512,44.0 516,46.4 520,51.5 524,55.5 528,55.3 532,51.1 536,46.1 540,44.0 544,46.5 548,51.6 552,55.5 556,55.3 560,51.0 564,46.0 568,44.0 572,46.5 576,51.7 580,55.6 584,55.2 588,50.9 592,45.9 596,44.0 600,46.6 604,51.8 608,55.6 612,55.2 616,50.8 620,45.9 624,44.0 628,46.7 632,51.9 636,55.6 640,55.1 644,50.7 648,45.8 652,44.0 656,46.8 660,52.0" fill="none" stroke="#9EC8B0" stroke-width="1.8" opacity=".6"/><rect x="209" y="66" width="22" height="12" rx="4" fill="none" stroke="#FFBD46" stroke-width="1.3" opacity=".6"/><rect x="249" y="66" width="22" height="12" rx="4" fill="none" stroke="#FFBD46" stroke-width="1.3" opacity=".6"/><rect x="289" y="66" width="22" height="12" rx="4" fill="none" stroke="#FFBD46" stroke-width="1.3" opacity=".6"/><rect x="329" y="66" width="22" height="12" rx="4" fill="none" stroke="#FFBD46" stroke-width="1.3" opacity=".6"/><rect x="369" y="66" width="22" height="12" rx="4" fill="none" stroke="#FFBD46" stroke-width="1.3" opacity=".6"/><rect x="409" y="66" width="22" height="12" rx="4" fill="none" stroke="#FFBD46" stroke-width="1.3" opacity=".6"/><rect x="449" y="66" width="22" height="12" rx="4" fill="none" stroke="#FFBD46" stroke-width="1.3" opacity=".6"/><rect x="489" y="66" width="22" height="12" rx="4" fill="none" stroke="#FFBD46" stroke-width="1.3" opacity=".6"/><rect x="529" y="66" width="22" height="12" rx="4" fill="none" stroke="#FFBD46" stroke-width="1.3" opacity=".6"/><circle cx="380" cy="50" r="4" fill="#E0732E" opacity=".7"/></g>
+<text x="380" y="103" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="10" fill="#FFBD46" letter-spacing="2">LA LIGNE DU SNA ET LA COLONNE VERTÉBRALE</text>
+</svg>`,
+4: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 110" preserveAspectRatio="xMidYMid slice">
+<rect width="760" height="110" fill="#0C2613"/>
+<g transform="translate(380,61) scale(0.7) translate(-380,-50)"><ellipse cx="230" cy="48" rx="24" ry="24" fill="none" stroke="#9EC8B0" stroke-width="1.6" opacity=".55"/><ellipse cx="230" cy="48" rx="10.8" ry="10.8" fill="#9EC8B0" opacity=".3"/><ellipse cx="330" cy="48" rx="26" ry="20" fill="none" stroke="#9EC8B0" stroke-width="1.6" opacity=".55"/><ellipse cx="330" cy="48" rx="11.7" ry="9.0" fill="#9EC8B0" opacity=".3"/><ellipse cx="430" cy="48" rx="20" ry="26" fill="none" stroke="#9EC8B0" stroke-width="1.6" opacity=".55"/><ellipse cx="430" cy="48" rx="9.0" ry="11.7" fill="#9EC8B0" opacity=".3"/><ellipse cx="530" cy="48" rx="24" ry="24" fill="none" stroke="#9EC8B0" stroke-width="1.6" opacity=".55"/><ellipse cx="530" cy="48" rx="10.8" ry="10.8" fill="#9EC8B0" opacity=".3"/><path d="M512,48 A18,18 0 0,0 548,48" fill="none" stroke="#FFBD46" stroke-width="2" opacity=".65"/><circle cx="170" cy="48" r="4" fill="#E0732E" opacity=".55"/><circle cx="590" cy="48" r="4" fill="#E0732E" opacity=".55"/></g>
+<text x="380" y="103" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="10" fill="#FFBD46" letter-spacing="2">LES FORMES DE LA PUPILLE</text>
+</svg>`,
+5: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 110" preserveAspectRatio="xMidYMid slice">
+<rect width="760" height="110" fill="#0C2613"/>
+<g transform="translate(380,61) scale(0.7) translate(-380,-50)"><circle cx="380" cy="50" r="10" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity="0.5"/><circle cx="380" cy="50" r="18" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity="0.35"/><circle cx="380" cy="50" r="26" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity="0.35"/><circle cx="380" cy="50" r="34" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity="0.35"/><circle cx="380" cy="50" r="42" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity="0.55"/><circle cx="418.0" cy="50.0" r="2" fill="#FFBD46" opacity=".7"/><circle cx="410.7" cy="72.3" r="2" fill="#FFBD46" opacity=".7"/><circle cx="391.7" cy="86.1" r="2" fill="#FFBD46" opacity=".7"/><circle cx="368.3" cy="86.1" r="2" fill="#FFBD46" opacity=".7"/><circle cx="349.3" cy="72.3" r="2" fill="#FFBD46" opacity=".7"/><circle cx="342.0" cy="50.0" r="2" fill="#FFBD46" opacity=".7"/><circle cx="349.3" cy="27.7" r="2" fill="#FFBD46" opacity=".7"/><circle cx="368.3" cy="13.9" r="2" fill="#FFBD46" opacity=".7"/><circle cx="391.7" cy="13.9" r="2" fill="#FFBD46" opacity=".7"/><circle cx="410.7" cy="27.7" r="2" fill="#FFBD46" opacity=".7"/><line x1="200" y1="50" x2="320" y2="50" stroke="#9EC8B0" stroke-width="1" opacity=".35"/><line x1="440" y1="50" x2="560" y2="50" stroke="#9EC8B0" stroke-width="1" opacity=".35"/><circle cx="200" cy="50" r="4" fill="#E0732E" opacity=".6"/><circle cx="560" cy="50" r="4" fill="#E0732E" opacity=".6"/></g>
+<text x="380" y="103" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="10" fill="#FFBD46" letter-spacing="2">LES SIGNES DE L'IRIS, DU CENTRE VERS LA PÉRIPHÉRIE</text>
+</svg>`,
+6: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 110" preserveAspectRatio="xMidYMid slice">
+<rect width="760" height="110" fill="#0C2613"/>
+<g transform="translate(380,61) scale(0.7) translate(-380,-50)"><circle cx="380" cy="50" r="42" fill="none" stroke="#9EC8B0" stroke-width="1.6" opacity=".55"/><circle cx="380" cy="50" r="13.4" fill="#9EC8B0" opacity=".25"/><line x1="396.0" y1="50.0" x2="418.6" y2="50.0" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="395.6" y1="53.6" x2="417.7" y2="58.6" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="394.4" y1="56.9" x2="414.8" y2="66.8" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="392.5" y1="60.0" x2="410.2" y2="74.1" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="390.0" y1="62.5" x2="404.1" y2="80.2" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="386.9" y1="64.4" x2="396.8" y2="84.8" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="383.6" y1="65.6" x2="388.6" y2="87.7" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="380.0" y1="66.0" x2="380.0" y2="88.6" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="376.4" y1="65.6" x2="371.4" y2="87.7" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="373.1" y1="64.4" x2="363.2" y2="84.8" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="370.0" y1="62.5" x2="355.9" y2="80.2" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="367.5" y1="60.0" x2="349.8" y2="74.1" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="365.6" y1="56.9" x2="345.2" y2="66.8" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="364.4" y1="53.6" x2="342.3" y2="58.6" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="364.0" y1="50.0" x2="341.4" y2="50.0" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="364.4" y1="46.4" x2="342.3" y2="41.4" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="365.6" y1="43.1" x2="345.2" y2="33.2" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="367.5" y1="40.0" x2="349.8" y2="25.9" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="370.0" y1="37.5" x2="355.9" y2="19.8" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="373.1" y1="35.6" x2="363.2" y2="15.2" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="376.4" y1="34.4" x2="371.4" y2="12.3" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="380.0" y1="34.0" x2="380.0" y2="11.4" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="383.6" y1="34.4" x2="388.6" y2="12.3" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="386.9" y1="35.6" x2="396.8" y2="15.2" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="390.0" y1="37.5" x2="404.1" y2="19.8" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="392.5" y1="40.0" x2="410.2" y2="25.9" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="394.4" y1="43.1" x2="414.8" y2="33.2" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><line x1="395.6" y1="46.4" x2="417.7" y2="41.4" stroke="#9EC8B0" stroke-width="1" opacity="0.3"/><circle cx="400" cy="34" r="5" fill="#E0732E" opacity=".75"/><path d="M352,62 Q360,52 368,62 Q360,70 352,62 Z" fill="none" stroke="#FFBD46" stroke-width="1.5" opacity=".7"/><ellipse cx="404" cy="66" rx="7" ry="4" fill="#FFBD46" opacity=".35"/><circle cx="230" cy="50" r="4" fill="#9EC8B0" opacity=".5"/><circle cx="530" cy="50" r="4" fill="#9EC8B0" opacity=".5"/></g>
+<text x="380" y="103" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="10" fill="#FFBD46" letter-spacing="2">LE PSORA, LA TACHE DE DROGUE ET LES LÉSIONS</text>
+</svg>`
+};
+
+const QTHEM = [1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6];
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0gC23RySD2Y9xa5uSXYGREjdLGvMT0pfoomD7_dTNFjZW1y-XRjCIKQYEnMPUDSniJg/exec";
+const PTS = 100/40;
+const CORRECT_ANS=[
+"Le souvenir du hibou lui revient : il se met à observer les yeux des personnes qu'il aide et remarque, de plus en plus souvent, un lien entre les marques de l'iris et ce qu'elles vivent dans leur corps.",
+"elle repère l'organe par sa position générale (haut, bas, centre, périphérie).",
+"Son propre corps devient ainsi son premier terrain d'étude : il veut comprendre ce que les substances et les blessures laissent dans l'œil.",
+"Pour comparer un si grand nombre d'observations et en discuter avec d'autres professionnels, il lui faut un langage commun, assez précis pour que deux personnes qui décrivent la même marque se comprennent sans hésiter.",
+"Jensen explique que ces zones représentent la distance entre chaque partie du corps et le centre du corps : plus une zone est proche de la pupille, plus les organes qu'elle représente sont profonds (l'estomac en zone 1, l'intestin en zone 2); plus elle est proche de la bordure, plus ils sont en surface (la peau en zone 7).",
+"Une plage d'heures se lit toujours dans le sens des aiguilles d'une montre : « de 6 h à 11 h » commence à 6 h et monte jusqu'à 11 h en passant par 9 h.",
+"Au-delà, des cercles séparent les zones 3, 4 et 5, où se trouvent les cases des organes; la zone 6 est la bande de la lymphe et de la circulation, et la zone 7, celle de la peau.",
+"La couleur de fond, bleue ou brune, reflète une tendance de terrain plutôt que le degré de santé.",
+"Parce que c'est lui qui reçoit, par le sang, tout ce que l'intestin absorbe, et qui neutralise ce que le corps ne peut pas utiliser.",
+"Placées à l'entrée de la gorge, les amygdales sont des postes de garde : elles protègent le corps contre ce qui entre par la respiration et par la bouche, comme les bactéries de la bouche ou ce que l'on porte à ses lèvres.",
+"Elles surveillent ce qui passe dans l'intestin et participent à la défense du corps, notamment en produisant des anticorps qui protègent la muqueuse.",
+"une lésion grise orienterait vers une thyroïde ralentie, une lésion blanche vers une thyroïde trop active.",
+"ce n'est pas ce que nous mangeons qui compte, mais ce que nous digérons et assimilons.",
+"C'est le pont réactif entre les signaux nerveux, rapides, et le système endocrinien, qui stabilise et maintient les besoins du corps pour lui permettre de s'adapter.",
+"dans les difficultés du cœur, la ligne du SNA elle-même est toujours touchée.",
+"Tu observeras toujours trois choses, dans cet ordre : la position de la ligne (à quelle distance de la pupille elle se trouve), sa couleur (si elle suit ou non la couleur de fond de l'iris) et sa forme (ronde, pointue ou coupée).",
+"Une ligne presque invisible orienterait vers une transmission nerveuse faible. Cela peut indiquer que les glandes surrénales auraient à prendre le relais pour soutenir l'organisme.",
+"La règle de base est simple : une ligne du SNA en équilibre a la même couleur que le fond de l'iris, avec un aspect mat.",
+"Les signes sont presque toujours plus difficiles à lire dans un iris brun : dans le doute, reviens aux grands repères plutôt que de deviner.",
+"C'est un spasme externe : il irriterait l'organe situé au bout de la pointe, qui recevrait un excès de stimulation nerveuse (une hyperstimulation).",
+"Le ballonnement viendrait des gaz et de la constipation, alors que le spasme viendrait des nerfs, souvent sous l'effet du stress ou des émotions.",
+"Pour toi, cela fait de la ligne du SNA un repère de suivi : lorsque la personne reçoit des soins pour son dos (chiropratique, ostéopathie, physiothérapie), tu peux noter l'état de la ligne à l'étage concerné et le comparer à la rencontre suivante.",
+"une pupille plus petite d'un côté, une paupière légèrement tombante et une transpiration réduite du même côté du visage forment le syndrome de Claude Bernard-Horner, qui demande toujours une évaluation médicale.",
+"si la pupille est aplatie d'un côté, regarde les organes situés dans la direction de l'aplatissement; si elle est étirée, regarde dans la direction de l'étirement.",
+"Une pupille peut aussi devenir irrégulière pour des raisons purement oculaires : une chirurgie ou un traumatisme de l'œil, une ancienne inflammation qui a laissé l'iris collé au cristallin, une particularité présente dès la naissance.",
+"Forme d'asthme nerveux; le côté de l'ellipse indiquerait le côté des bronches sollicitées",
+"Une pupille ovale ou déformée qui apparaît récemment, surtout si elle s'accompagne d'un mal de tête intense, d'un trouble soudain de la vision, d'une faiblesse ou d'un engourdissement d'un côté du corps, ou d'une difficulté à parler, demande une orientation médicale d'urgence.",
+"Un estomac commence souvent par produire trop d'acide, notamment sous l'effet du stress, de la colère ou de la peur, qui stimulent sa production. Avec le temps, la paroi s'épuise et finit par en produire trop peu.",
+"Tu y lis l'état de la muqueuse de l'estomac, c'est-à-dire sa capacité à faire son travail. Lorsqu'une ligne brune s'y installe, elle orienterait vers une muqueuse fatiguée, dont la capacité de travail diminue, et vers une absorption plus difficile des nutriments",
+"Le rôle de l'intestin se résume en trois mots : digestion, assimilation, élimination.",
+"Les radii solaris qui partent de la ligne du SNA sont dits mineurs; ceux qui partent dès le bord de la pupille et traversent toute la zone de l'intestin sont dits majeurs.",
+"Les anneaux nerveux représentent la capacité de la personne à soutenir le stress de la vie.",
+"Les fibres ondulées orienteraient vers des glandes surrénales en déséquilibre : un stress surrénalien.",
+"Quand le corps devient saturé de toxines, la lymphe cherche à évacuer le surplus d'acide et de mucus; elle se congestionne, et c'est alors qu'elle devient visible.",
+"ils ne se trouvent pas tous dans l'iris. Le cercle de la peau est dans l'iris lui-même, en zone 7. L'anneau de sodium, l'anémie aux extrémités et l'arc de sénilité sont dans la cornée, la fenêtre transparente devant l'iris : on les voit à travers elle, comme une buée sur une vitre. La congestion veineuse est dans le blanc de l'œil (la sclérotique), collée au bord de l'iris.",
+"Le mot psora vient du grec psôra, qui désigne la gale, la démangeaison.",
+"La tache de drogue ne signifie donc pas que la personne consomme des drogues. Elle désigne une substance que le corps n'a pas réussi à éliminer : un médicament, un additif, un métal, un produit chimique, un résidu alimentaire mal digéré.",
+"il reste moins de fibres pour renvoyer la lumière vers ton œil, et la lumière qui atteint le fond du creux y rencontre la couche pigmentée foncée qui tapisse l'arrière de l'iris, qui l'absorbe.",
+"Avant qu'un tissu puisse reprendre de la vitalité, le corps doit d'abord se nettoyer des résidus accumulés et augmenter l'apport de sang à cet endroit. Ce nettoyage se remarque en premier par une diminution des dépôts de couleur; les fibres de régénération apparaissent ensuite.",
+"les fibres aiguës sont des fibres en rayon, soulevées en relief, alors que les lignes de régénération sont des fibres croisées qui traversent la lésion."
+];
+const QS=[
+{id:1,q:"Qu'est-ce qui a poussé von Peczely à observer les yeux des personnes qu'il aidait?",ok:"C",ch:[{l:"A",t:"2.5.8 Le cercle de la peau et l'anémie aux extrémités"},{l:"B",t:"2.1.6 Ce qui explique cette évolution"},{l:"C",t:"2.1.2 La carte de von Peczely : les premiers grands repères"},{l:"D",t:"2.2.11 Le système circulatoire : le sang et la lymphe"},{l:"E",t:"2.1.5 La carte de Bernard Jensen : pourquoi c'est celle-ci qui structure ce cahier"}]},
+{id:2,q:"Comment la carte de von Peczely repère-t-elle un organe?",ok:"A",ch:[{l:"A",t:"2.1.2 La carte de von Peczely : les premiers grands repères"},{l:"B",t:"2.2.11 Le système circulatoire : le sang et la lymphe"},{l:"C",t:"2.5.6 Le déséquilibre glandulaire"},{l:"D",t:"2.1.6 Ce qui explique cette évolution"},{l:"E",t:"2.1.3 La carte de Liljequist : la même idée, sans concertation"}]},
+{id:3,q:"Quel a été le premier terrain d'étude de Liljequist, et que voulait-il comprendre?",ok:"C",ch:[{l:"A",t:"2.1.2 La carte de von Peczely : les premiers grands repères"},{l:"B",t:"2.6.7 Les signes de régénération : quand l'iris change"},{l:"C",t:"2.1.3 La carte de Liljequist : la même idée, sans concertation"},{l:"D",t:"2.6.5 La lésion ouverte et la lésion fermée : deux marques de structure"},{l:"E",t:"2.1.5 La carte de Bernard Jensen : pourquoi c'est celle-ci qui structure ce cahier"}]},
+{id:4,q:"Pourquoi Deck avait-il besoin d'un repère horaire?",ok:"A",ch:[{l:"A",t:"2.1.4 La carte de Vida et Deck : le repère de l'horloge"},{l:"B",t:"2.1.5 La carte de Bernard Jensen : pourquoi c'est celle-ci qui structure ce cahier"},{l:"C",t:"2.3.7 La ligne du SNA ou la zone de la colonne : deux lectures à bien distinguer"},{l:"D",t:"2.5.12 Cinq signes en bordure de l'iris : où se trouve chacun"},{l:"E",t:"2.1.2 La carte de von Peczely : les premiers grands repères"}]},
+{id:5,q:"Que représentent les sept zones que Jensen superpose aux secteurs de l'horloge?",ok:"E",ch:[{l:"A",t:"2.1.4 La carte de Vida et Deck : le repère de l'horloge"},{l:"B",t:"2.1.6 Ce qui explique cette évolution"},{l:"C",t:"2.3.3 La position de la ligne du SNA, zone par zone"},{l:"D",t:"2.5.5 Les anneaux nerveux"},{l:"E",t:"2.1.5 La carte de Bernard Jensen : pourquoi c'est celle-ci qui structure ce cahier"}]},
+{id:6,q:"Dans quel sens lis-tu une plage d'heures sur le cadran?",ok:"D",ch:[{l:"A",t:"2.3.9 Une lecture née dans un contexte clinique particulier"},{l:"B",t:"2.5.3 La zone 2, l'intestin : miroir de la qualité d'élimination"},{l:"C",t:"2.2.4 Le système d'élimination"},{l:"D",t:"2.2.2 Comment lire la carte : les heures, les côtés et les zones"},{l:"E",t:"2.2.5 Le système respiratoire"}]},
+{id:7,q:"Comment les zones sont-elles dessinées au-delà de la ligne du SNA, sur la carte de notre formation?",ok:"B",ch:[{l:"A",t:"2.2.11 Le système circulatoire : le sang et la lymphe"},{l:"B",t:"2.2.2 Comment lire la carte : les heures, les côtés et les zones"},{l:"C",t:"2.5.8 Le cercle de la peau et l'anémie aux extrémités"},{l:"D",t:"2.2.5 Le système respiratoire"},{l:"E",t:"2.1.2 La carte de von Peczely : les premiers grands repères"}]},
+{id:8,q:"Que reflète la couleur de fond de l'iris, bleue ou brune?",ok:"A",ch:[{l:"A",t:"2.2.3 Avant les organes : ce que la coloration générale de l'iris t'indique"},{l:"B",t:"2.5.8 Le cercle de la peau et l'anémie aux extrémités"},{l:"C",t:"2.5.9 L'anneau de sodium et le cholestérol"},{l:"D",t:"2.2.14 La communication du système nerveux avec l'organisme : toutes les façons de l'observer"},{l:"E",t:"2.2.4 Le système d'élimination"}]},
+{id:9,q:"Pourquoi une coloration brune générale t'oriente-t-elle vers le foie?",ok:"C",ch:[{l:"A",t:"2.3.5 La forme de la ligne du SNA : pointes et coupures"},{l:"B",t:"2.2.4 Le système d'élimination"},{l:"C",t:"2.2.3 Avant les organes : ce que la coloration générale de l'iris t'indique"},{l:"D",t:"2.5.7 Le rosaire lymphatique"},{l:"E",t:"2.2.8 Le système digestif"}]},
+{id:10,q:"Quel rôle jouent les amygdales?",ok:"E",ch:[{l:"A",t:"2.5.12 Cinq signes en bordure de l'iris : où se trouve chacun"},{l:"B",t:"2.3.2 La ligne du SNA : ce que tu observes et ce qu'elle représente"},{l:"C",t:"2.2.6 Le système glandulaire"},{l:"D",t:"2.2.2 Comment lire la carte : les heures, les côtés et les zones"},{l:"E",t:"2.2.4 Le système d'élimination"}]},
+{id:11,q:"Quel est le rôle des plaques de Peyer?",ok:"A",ch:[{l:"A",t:"2.2.4 Le système d'élimination"},{l:"B",t:"2.5.3 La zone 2, l'intestin : miroir de la qualité d'élimination"},{l:"C",t:"2.2.8 Le système digestif"},{l:"D",t:"2.2.12 La structure : la colonne, les os et les muscles"},{l:"E",t:"2.6.6 Le diverticule, une lésion fermée au bon endroit"}]},
+{id:12,q:"Comment lis-tu une lésion grise ou une lésion blanche dans la zone de la thyroïde?",ok:"E",ch:[{l:"A",t:"2.5.7 Le rosaire lymphatique"},{l:"B",t:"2.5.4 Les radii solaris"},{l:"C",t:"2.2.12 La structure : la colonne, les os et les muscles"},{l:"D",t:"2.2.13 Lire l'iris comme un tout : les liens entre les systèmes"},{l:"E",t:"2.2.6 Le système glandulaire"}]},
+{id:13,q:"Quelle phrase de Jensen résume le rôle du système digestif?",ok:"B",ch:[{l:"A",t:"2.3.8 Un principe anatomique commun"},{l:"B",t:"2.2.8 Le système digestif"},{l:"C",t:"2.2.12 La structure : la colonne, les os et les muscles"},{l:"D",t:"2.4.2 Ce qui donne sa forme à la pupille : la physiologie du signe"},{l:"E",t:"2.2.13 Lire l'iris comme un tout : les liens entre les systèmes"}]},
+{id:14,q:"Quel rôle joue l'hypothalamus, à midi, entre le système nerveux et le système endocrinien?",ok:"E",ch:[{l:"A",t:"2.3.9 Une lecture née dans un contexte clinique particulier"},{l:"B",t:"2.1.5 La carte de Bernard Jensen : pourquoi c'est celle-ci qui structure ce cahier"},{l:"C",t:"2.2.14 La communication du système nerveux avec l'organisme : toutes les façons de l'observer"},{l:"D",t:"2.2.11 Le système circulatoire : le sang et la lymphe"},{l:"E",t:"2.2.10 Le cérébral : le cerveau, centre de commande"}]},
+{id:15,q:"Quel critère distingue une difficulté du cœur d'une difficulté des bronchioles?",ok:"A",ch:[{l:"A",t:"2.2.11 Le système circulatoire : le sang et la lymphe"},{l:"B",t:"2.3.6 La ligne du SNA, miroir de la colonne vertébrale"},{l:"C",t:"2.2.3 Avant les organes : ce que la coloration générale de l'iris t'indique"},{l:"D",t:"2.5.7 Le rosaire lymphatique"},{l:"E",t:"2.2.5 Le système respiratoire"}]},
+{id:16,q:"Quelles trois choses observes-tu sur la ligne du SNA, et dans quel ordre?",ok:"B",ch:[{l:"A",t:"2.6.3 La tache de drogue : une difficulté à éliminer les toxines lourdes"},{l:"B",t:"2.3.2 La ligne du SNA : ce que tu observes et ce qu'elle représente"},{l:"C",t:"2.3.4 La couleur de la ligne du SNA, dans un iris bleu et dans un iris brun"},{l:"D",t:"2.2.11 Le système circulatoire : le sang et la lymphe"},{l:"E",t:"2.3.6 La ligne du SNA, miroir de la colonne vertébrale"}]},
+{id:17,q:"Que peut indiquer une ligne du SNA presque invisible?",ok:"E",ch:[{l:"A",t:"2.3.5 La forme de la ligne du SNA : pointes et coupures"},{l:"B",t:"2.3.8 Un principe anatomique commun"},{l:"C",t:"2.2.8 Le système digestif"},{l:"D",t:"2.5.6 Le déséquilibre glandulaire"},{l:"E",t:"2.3.3 La position de la ligne du SNA, zone par zone"}]},
+{id:18,q:"Quelle est la règle de base pour la couleur de la ligne du SNA?",ok:"A",ch:[{l:"A",t:"2.3.4 La couleur de la ligne du SNA, dans un iris bleu et dans un iris brun"},{l:"B",t:"2.4.2 Ce qui donne sa forme à la pupille : la physiologie du signe"},{l:"C",t:"2.6.4 Le psora et la tache de drogue côte à côte"},{l:"D",t:"2.3.3 La position de la ligne du SNA, zone par zone"},{l:"E",t:"2.3.7 La ligne du SNA ou la zone de la colonne : deux lectures à bien distinguer"}]},
+{id:19,q:"Que fais-tu lorsqu'une couleur de la ligne est difficile à lire dans un iris brun?",ok:"D",ch:[{l:"A",t:"2.2.12 La structure : la colonne, les os et les muscles"},{l:"B",t:"2.5.10 L'arc de sénilité"},{l:"C",t:"2.3.5 La forme de la ligne du SNA : pointes et coupures"},{l:"D",t:"2.3.4 La couleur de la ligne du SNA, dans un iris bleu et dans un iris brun"},{l:"E",t:"2.3.3 La position de la ligne du SNA, zone par zone"}]},
+{id:20,q:"Que représente une pointe externe de la ligne du SNA?",ok:"C",ch:[{l:"A",t:"2.2.12 La structure : la colonne, les os et les muscles"},{l:"B",t:"2.5.7 Le rosaire lymphatique"},{l:"C",t:"2.3.5 La forme de la ligne du SNA : pointes et coupures"},{l:"D",t:"2.3.8 Un principe anatomique commun"},{l:"E",t:"2.3.2 La ligne du SNA : ce que tu observes et ce qu'elle représente"}]},
+{id:21,q:"D'où viennent le ballonnement et le spasme qui déforment la ligne?",ok:"D",ch:[{l:"A",t:"2.3.6 La ligne du SNA, miroir de la colonne vertébrale"},{l:"B",t:"2.5.12 Cinq signes en bordure de l'iris : où se trouve chacun"},{l:"C",t:"2.6.2 Le psora : une marque transmise avant la naissance"},{l:"D",t:"2.3.5 La forme de la ligne du SNA : pointes et coupures"},{l:"E",t:"2.3.2 La ligne du SNA : ce que tu observes et ce qu'elle représente"}]},
+{id:22,q:"À quoi te sert la ligne du SNA lorsque la personne reçoit des soins pour son dos?",ok:"E",ch:[{l:"A",t:"2.1.5 La carte de Bernard Jensen : pourquoi c'est celle-ci qui structure ce cahier"},{l:"B",t:"2.3.3 La position de la ligne du SNA, zone par zone"},{l:"C",t:"2.5.8 Le cercle de la peau et l'anémie aux extrémités"},{l:"D",t:"2.3.5 La forme de la ligne du SNA : pointes et coupures"},{l:"E",t:"2.3.6 La ligne du SNA, miroir de la colonne vertébrale"}]},
+{id:23,q:"Quels signes forment le syndrome de Claude Bernard-Horner, et que demande-t-il?",ok:"B",ch:[{l:"A",t:"2.4.4 Les pupilles de forme elliptique, un signe à prendre au sérieux"},{l:"B",t:"2.4.2 Ce qui donne sa forme à la pupille : la physiologie du signe"},{l:"C",t:"2.2.2 Comment lire la carte : les heures, les côtés et les zones"},{l:"D",t:"2.2.13 Lire l'iris comme un tout : les liens entre les systèmes"},{l:"E",t:"2.4.3 Les affaissements localisés, associés à une région vertébrale"}]},
+{id:24,q:"Quelle règle simple permet de lire un aplatissement ou un étirement de la pupille?",ok:"A",ch:[{l:"A",t:"2.4.2 Ce qui donne sa forme à la pupille : la physiologie du signe"},{l:"B",t:"2.3.9 Une lecture née dans un contexte clinique particulier"},{l:"C",t:"2.4.4 Les pupilles de forme elliptique, un signe à prendre au sérieux"},{l:"D",t:"2.2.5 Le système respiratoire"},{l:"E",t:"2.4.3 Les affaissements localisés, associés à une région vertébrale"}]},
+{id:25,q:"Quelles raisons purement oculaires peuvent rendre une pupille irrégulière?",ok:"B",ch:[{l:"A",t:"2.2.6 Le système glandulaire"},{l:"B",t:"2.4.2 Ce qui donne sa forme à la pupille : la physiologie du signe"},{l:"C",t:"2.5.2 La zone 1, l'estomac : le point de départ de l'observation"},{l:"D",t:"2.4.4 Les pupilles de forme elliptique, un signe à prendre au sérieux"},{l:"E",t:"2.4.3 Les affaissements localisés, associés à une région vertébrale"}]},
+{id:26,q:"Vers quoi orienterait une ellipse d'un seul côté?",ok:"A",ch:[{l:"A",t:"2.4.4 Les pupilles de forme elliptique, un signe à prendre au sérieux"},{l:"B",t:"2.4.2 Ce qui donne sa forme à la pupille : la physiologie du signe"},{l:"C",t:"2.2.14 La communication du système nerveux avec l'organisme : toutes les façons de l'observer"},{l:"D",t:"2.4.3 Les affaissements localisés, associés à une région vertébrale"},{l:"E",t:"2.2.10 Le cérébral : le cerveau, centre de commande"}]},
+{id:27,q:"Que fais-tu devant une pupille ovale ou déformée qui apparaît récemment, avec un mal de tête intense ou une faiblesse d'un côté du corps?",ok:"D",ch:[{l:"A",t:"2.5.12 Cinq signes en bordure de l'iris : où se trouve chacun"},{l:"B",t:"2.4.2 Ce qui donne sa forme à la pupille : la physiologie du signe"},{l:"C",t:"2.4.3 Les affaissements localisés, associés à une région vertébrale"},{l:"D",t:"2.4.4 Les pupilles de forme elliptique, un signe à prendre au sérieux"},{l:"E",t:"2.2.9 Le système nerveux"}]},
+{id:28,q:"Comment évolue souvent l'acidité de l'estomac avec le temps?",ok:"E",ch:[{l:"A",t:"2.2.6 Le système glandulaire"},{l:"B",t:"2.5.5 Les anneaux nerveux"},{l:"C",t:"2.5.4 Les radii solaris"},{l:"D",t:"2.6.5 La lésion ouverte et la lésion fermée : deux marques de structure"},{l:"E",t:"2.5.2 La zone 1, l'estomac : le point de départ de l'observation"}]},
+{id:29,q:"Que lis-tu dans l'anneau d'absorption, le mince anneau qui borde la pupille, et vers quoi orienterait une ligne brune qui s'y installe?",ok:"C",ch:[{l:"A",t:"2.5.11 La congestion veineuse"},{l:"B",t:"2.4.4 Les pupilles de forme elliptique, un signe à prendre au sérieux"},{l:"C",t:"2.5.2 La zone 1, l'estomac : le point de départ de l'observation"},{l:"D",t:"2.2.15 Vers les signes et les symboles"},{l:"E",t:"2.5.10 L'arc de sénilité"}]},
+{id:30,q:"En quels trois mots se résume le rôle de l'intestin?",ok:"D",ch:[{l:"A",t:"2.2.4 Le système d'élimination"},{l:"B",t:"2.5.12 Cinq signes en bordure de l'iris : où se trouve chacun"},{l:"C",t:"2.2.13 Lire l'iris comme un tout : les liens entre les systèmes"},{l:"D",t:"2.5.3 La zone 2, l'intestin : miroir de la qualité d'élimination"},{l:"E",t:"2.5.9 L'anneau de sodium et le cholestérol"}]},
+{id:31,q:"Comment distingue-t-on les radii solaris mineurs des radii solaris majeurs?",ok:"C",ch:[{l:"A",t:"2.2.13 Lire l'iris comme un tout : les liens entre les systèmes"},{l:"B",t:"2.3.9 Une lecture née dans un contexte clinique particulier"},{l:"C",t:"2.5.4 Les radii solaris"},{l:"D",t:"2.5.8 Le cercle de la peau et l'anémie aux extrémités"},{l:"E",t:"2.5.10 L'arc de sénilité"}]},
+{id:32,q:"Que représentent les anneaux nerveux?",ok:"D",ch:[{l:"A",t:"2.2.6 Le système glandulaire"},{l:"B",t:"2.5.8 Le cercle de la peau et l'anémie aux extrémités"},{l:"C",t:"2.2.5 Le système respiratoire"},{l:"D",t:"2.5.5 Les anneaux nerveux"},{l:"E",t:"2.5.4 Les radii solaris"}]},
+{id:33,q:"Des fibres ondulées apparaissent dans l'iris, mais aucune tache ne marque la zone d'une glande. Vers quoi orienteraient-elles?",ok:"E",ch:[{l:"A",t:"2.1.6 Ce qui explique cette évolution"},{l:"B",t:"2.2.13 Lire l'iris comme un tout : les liens entre les systèmes"},{l:"C",t:"2.5.8 Le cercle de la peau et l'anémie aux extrémités"},{l:"D",t:"2.5.12 Cinq signes en bordure de l'iris : où se trouve chacun"},{l:"E",t:"2.5.6 Le déséquilibre glandulaire"}]},
+{id:34,q:"Pourquoi la lymphe devient-elle visible dans l'iris?",ok:"C",ch:[{l:"A",t:"2.5.6 Le déséquilibre glandulaire"},{l:"B",t:"2.2.11 Le système circulatoire : le sang et la lymphe"},{l:"C",t:"2.5.7 Le rosaire lymphatique"},{l:"D",t:"2.4.4 Les pupilles de forme elliptique, un signe à prendre au sérieux"},{l:"E",t:"2.5.11 La congestion veineuse"}]},
+{id:35,q:"Les cinq signes observables en bordure de l'iris se trouvent-ils tous dans l'iris lui-même?",ok:"B",ch:[{l:"A",t:"2.4.4 Les pupilles de forme elliptique, un signe à prendre au sérieux"},{l:"B",t:"2.5.12 Cinq signes en bordure de l'iris : où se trouve chacun"},{l:"C",t:"2.1.5 La carte de Bernard Jensen : pourquoi c'est celle-ci qui structure ce cahier"},{l:"D",t:"2.5.5 Les anneaux nerveux"},{l:"E",t:"2.5.6 Le déséquilibre glandulaire"}]},
+{id:36,q:"D'où vient le nom psora?",ok:"D",ch:[{l:"A",t:"2.1.5 La carte de Bernard Jensen : pourquoi c'est celle-ci qui structure ce cahier"},{l:"B",t:"2.2.2 Comment lire la carte : les heures, les côtés et les zones"},{l:"C",t:"2.6.6 Le diverticule, une lésion fermée au bon endroit"},{l:"D",t:"2.6.2 Le psora : une marque transmise avant la naissance"},{l:"E",t:"2.6.3 La tache de drogue : une difficulté à éliminer les toxines lourdes"}]},
+{id:37,q:"Le nom « tache de drogue » signifie-t-il que la personne consomme des drogues?",ok:"B",ch:[{l:"A",t:"2.6.6 Le diverticule, une lésion fermée au bon endroit"},{l:"B",t:"2.6.3 La tache de drogue : une difficulté à éliminer les toxines lourdes"},{l:"C",t:"2.5.12 Cinq signes en bordure de l'iris : où se trouve chacun"},{l:"D",t:"2.6.5 La lésion ouverte et la lésion fermée : deux marques de structure"},{l:"E",t:"2.1.2 La carte de von Peczely : les premiers grands repères"}]},
+{id:38,q:"Pourquoi une lésion profonde paraît-elle foncée?",ok:"D",ch:[{l:"A",t:"2.2.10 Le cérébral : le cerveau, centre de commande"},{l:"B",t:"2.1.4 La carte de Vida et Deck : le repère de l'horloge"},{l:"C",t:"2.6.4 Le psora et la tache de drogue côte à côte"},{l:"D",t:"2.6.5 La lésion ouverte et la lésion fermée : deux marques de structure"},{l:"E",t:"2.6.2 Le psora : une marque transmise avant la naissance"}]},
+{id:39,q:"Que doit faire le corps avant qu'un tissu puisse reprendre de la vitalité?",ok:"C",ch:[{l:"A",t:"2.1.2 La carte de von Peczely : les premiers grands repères"},{l:"B",t:"2.3.5 La forme de la ligne du SNA : pointes et coupures"},{l:"C",t:"2.6.7 Les signes de régénération : quand l'iris change"},{l:"D",t:"2.6.3 La tache de drogue : une difficulté à éliminer les toxines lourdes"},{l:"E",t:"2.6.2 Le psora : une marque transmise avant la naissance"}]},
+{id:40,q:"Comment distingue-t-on les lignes de régénération des fibres blanches de la phase aiguë?",ok:"B",ch:[{l:"A",t:"2.3.5 La forme de la ligne du SNA : pointes et coupures"},{l:"B",t:"2.6.7 Les signes de régénération : quand l'iris change"},{l:"C",t:"2.6.3 La tache de drogue : une difficulté à éliminer les toxines lourdes"},{l:"D",t:"2.6.2 Le psora : une marque transmise avant la naissance"},{l:"E",t:"2.5.5 Les anneaux nerveux"}]}
+];
+
+const LS="elysens_quiz_irido_m2_v1";
+let S={name:"",email:"",cur:0,done:false,score:0,
+ans:Array(40).fill(0).map(()=>({txt:"",mcq:null,ok:false}))};
+function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+function load(){try{const d=localStorage.getItem(LS);if(d){S=JSON.parse(d);return true}}catch(e){}return false}
+function reset(){localStorage.removeItem(LS);S={name:"",email:"",cur:0,done:false,score:0,ans:Array(40).fill(0).map(()=>({txt:"",mcq:null,ok:false}))}}
+function show(id){
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+document.getElementById("prog-wrap").style.display=id==="screen-quiz"?"block":"none";
+document.getElementById("float-submit").style.display=id==="screen-quiz"?"block":"none";
+}
+document.addEventListener("DOMContentLoaded",()=>{
+document.getElementById("btn-start").addEventListener("click",startQuiz);
+if(load()&&S.name&&!S.done){
+if(confirm("Quiz en cours trouvé pour "+S.name+".\n\nReprendre à la question "+(S.cur+1)+" ?\n\n(Annuler = recommencer à zéro)")){
+show("screen-quiz");liveScore();render();
+}else{reset();}
+}
+if(S.done){showResults();}
+});
+function startQuiz(){
+const n=document.getElementById("inp-name").value.trim();
+const e=document.getElementById("inp-email").value.trim();
+const err=document.getElementById("err-msg");
+if(!n||!e||!e.includes("@")){err.style.display="block";return;}
+err.style.display="none";
+S.name=n;S.email=e;save();
+show("screen-quiz");liveScore();render();
+}
+function render(){
+const i=S.cur,q=QS[i],ans=S.ans[i],locked=ans.mcq!==null;
+const pct=Math.round(i/40*100);
+document.getElementById("prog-bar").style.width=pct+"%";
+document.getElementById("prog-text").textContent="Question "+(i+1)+" / 40";
+document.getElementById("prog-pct").textContent=pct+" %";
+let ch="";
+const validAnswers = q.oks || [q.ok];
+q.ch.forEach(c=>{
+let cls="choice";
+if(locked){
+cls+=" locked";
+if(validAnswers.includes(c.l))cls+=" is-correct";
+else if(c.l===ans.mcq && !ans.ok)cls+=" is-wrong";
+}
+ch+=`<div class="${cls}" data-letter="${c.l}"><div class="letter">${c.l}</div><div class="choice-text">${c.t}</div></div>`;
+});
+let fb="";
+if(locked){
+const validAnsList = q.oks || [q.ok];
+const sectList = validAnsList.map(l=>q.ch.find(c=>c.l===l).t).join(" — ou — ");
+const cAns=CORRECT_ANS[i];
+fb=ans.ok
+?`<div class="fb ok show">✅ Bonne réponse ! Section : <strong>${sectList}</strong><br><span style="font-weight:400;font-size:13px;display:block;margin-top:6px;opacity:.9">📖 Réponse attendue : ${cAns}</span></div>`
+:`<div class="fb ko show">❌ La bonne réponse est : <strong>${sectList}</strong><br><span style="font-weight:400;font-size:13px;display:block;margin-top:6px;opacity:.9">📖 Réponse attendue : ${cAns}</span></div>`;
+}
+const isLast=i===39;
+const nxt=isLast
+?`<button class="btn btn-or" id="btn-next" ${!locked?"disabled":""} onclick="finish()">Terminer le quiz ✓</button>`
+:`<button class="btn btn-vert" id="btn-next" ${!locked?"disabled":""} onclick="goTo(${i+1})">Suivant →</button>`;
+const themeNum = QTHEM[i];
+const themeSvg = SVGS[themeNum] || "";
+document.getElementById("q-container").innerHTML=`
+<div class="q-card">
+<div class="q-visual">${themeSvg}</div>
+<div class="q-card-inner">
+<div class="q-num">QUESTION ${i+1} / 40</div>
+<div class="q-text">${q.q}</div>
+<div class="part-label">1 — A &nbsp;·&nbsp; Réponse à développement</div>
+<div class="part-hint">Consultez votre cahier et répondez avec vos propres mots :</div>
+<textarea id="ta" placeholder="Écrivez votre réponse ici…" ${locked?"disabled":""}>${ans.txt}</textarea>
+<div class="autosave">${locked?"🔒 Réponse verrouillée après le choix de section (1‑B)":"💾 Sauvegarde automatique à chaque frappe"}</div>
+<hr class="sep">
+<div class="part-label">1 — B &nbsp;·&nbsp; Section du cahier</div>
+<div class="part-hint">Dans quelle section avez-vous trouvé cette information ?</div>
+<div id="cw">${ch}</div>
+${fb}
+<div class="nav-row">
+<button class="btn btn-outline" onclick="goTo(${i-1})" ${i===0?"disabled":""}>← Précédent</button>
+<span style="font-size:13px;color:var(--muted)">Score : <strong>${Math.round(S.score)}</strong> / 100</span>
+${nxt}
+</div>
+</div>
+</div>`;
+document.getElementById("ta").addEventListener("input",e=>{S.ans[S.cur].txt=e.target.value;save();});
+if(!locked){
+document.getElementById("cw").addEventListener("click",e=>{
+const el=e.target.closest(".choice");
+if(!el)return;
+pick(el.dataset.letter);
+});
+}
+window.scrollTo(0,0);
+}
+function pick(letter){
+const i=S.cur,q=QS[i],ans=S.ans[i];
+if(ans.mcq!==null)return;
+const ta=document.getElementById("ta");
+if(ta)ans.txt=ta.value;
+ans.mcq=letter;
+const validAnswers = q.oks || [q.ok];
+ans.ok = validAnswers.includes(letter);
+if(ans.ok)S.score=Math.min(100,S.score+PTS);
+save();liveScore();render();
+}
+function goTo(idx){
+const ta=document.getElementById("ta");
+if(ta)S.ans[S.cur].txt=ta.value;
+save();
+if(idx<0||idx>=40)return;
+S.cur=idx;save();render();
+}
+function liveScore(){
+document.getElementById("live-score").textContent=Math.round(S.score)+" / 100";
+}
+function soumettreMaintenant(){
+if(confirm("Soumettre le quiz maintenant ? Les questions non répondues compteront comme incorrectes.")){
+const ta=document.getElementById("ta");
+if(ta)S.ans[S.cur].txt=ta.value;
+S.done=true;save();showResults();send();
+}
+}
+function finish(){
+const ta=document.getElementById("ta");
+if(ta)S.ans[S.cur].txt=ta.value;
+S.done=true;save();showResults();send();
+}
+function showResults(){
+show("screen-results");
+const pct=Math.round(S.score);
+const correct=S.ans.filter(a=>a.ok).length;
+const withTxt=S.ans.filter(a=>a.txt.trim().length>15).length;
+document.getElementById("res-pct").textContent=pct+" %";
+document.getElementById("live-score").textContent=pct+" / 100";
+const ms=[[90,"🏆 Excellent !"],[80,"🌟 Très bien"],[70,"👍 Bien"],[60,"📖 Passable"],[0,"⚠️ À revoir"]];
+document.getElementById("res-mention").textContent=ms.find(m=>pct>=m[0])[1];
+document.getElementById("res-breakdown").innerHTML=`
+<strong>Résumé</strong><br>
+📊 Score QCM (1‑B) : <strong>${pct} / 100</strong><br>
+✅ Bonnes réponses : <strong>${correct} / 40</strong><br>
+✍️ Réponses écrites (1‑A) : <strong>${withTxt} / 40</strong> complétées<br>
+👤 ${S.name}<br>📧 ${S.email}<br>
+📅 ${new Date().toLocaleDateString("fr-CA",{day:"2-digit",month:"long",year:"numeric"})}`;
+}
+function restartQuiz(){
+if(confirm("Recommencer le quiz ? Toute votre progression sera effacée.")){
+reset();
+document.getElementById("inp-name").value="";
+document.getElementById("inp-email").value="";
+document.getElementById("live-score").textContent="— / 100";
+show("screen-welcome");
+}
+}
+function send(){
+const el=document.getElementById("send-status");
+if(SCRIPT_URL==="REPLACE_WITH_GOOGLE_SCRIPT_URL"){
+el.className="send-st s-err";
+el.textContent="⚙️ URL Google Apps Script non configurée.";
+return;
+}
+const timeout = setTimeout(()=>{
+el.className="send-st s-ok";
+el.textContent="✅ Résultats transmis. Vérifiez votre Google Sheet.";
+}, 12000);
+const payload = JSON.stringify({
+module:"Iridologie M2", nom:S.name, courriel:S.email,
+date:new Date().toISOString(),
+score:Math.round(S.score),
+reponses:S.ans.map((a,i)=>({q:i+1,texte:a.txt,choix:a.mcq,correct:a.ok}))
+});
+fetch(SCRIPT_URL,{
+method:"POST",
+mode:"no-cors",
+headers:{"Content-Type":"text/plain"},
+body:payload
+})
+.then(()=>{
+clearTimeout(timeout);
+el.className="send-st s-ok";
+el.textContent="✅ Résultats transmis à l'enseignant.";
+})
+.catch(()=>{
+clearTimeout(timeout);
+el.className="send-st s-err";
+el.textContent="❌ Erreur d'envoi — contactez votre enseignant.";
+});
+}
+function showCorrige(){
+show("screen-corrige");
+const info=document.getElementById("corrige-info");
+info.textContent=S.name+" · "+S.email+" · Score : "+Math.round(S.score)+" / 100 · "+
+new Date().toLocaleDateString("fr-CA",{day:"2-digit",month:"long",year:"numeric"});
+const list=document.getElementById("corrige-list");
+let html="";
+QS.forEach((q,i)=>{
+const ans=S.ans[i];
+const locked=ans.mcq!==null;
+const correct=q.ch.find(c=>c.l===q.ok);
+const chosen=ans.mcq?q.ch.find(c=>c.l===ans.mcq):null;
+let status="skip",statusTxt="Non répondue";
+if(locked){status=ans.ok?"ok":"ko";statusTxt=ans.ok?"✅ Correcte":"❌ Incorrecte";}
+html+=`
+<div class="corrige-item">
+<div class="corrige-qnum ${status}">${statusTxt} — Question ${i+1}/40</div>
+<div class="corrige-qtxt">${q.q}</div>
+<div class="corrige-block">
+<div class="corrige-label">1 — A · Réponse développement</div>
+<div class="corrige-answer">${ans.txt.trim()||'<em style="color:var(--muted)">Aucune réponse écrite</em>'}</div>
+</div>
+<div class="corrige-block">
+<div class="corrige-label">✅ Bonne réponse — Corrigé</div>
+<div class="corrige-answer" style="border-left:3px solid #2E7D32;background:#E8F5E9;color:#1B5E20">${CORRECT_ANS[i]}</div>
+</div>
+<div class="corrige-block">
+<div class="corrige-label">1 — B · Section du cahier</div>
+<div class="corrige-mcq-row">
+${chosen && !ans.ok?`<div class="mcq-chip mcq-wrong">❌ Votre choix : ${chosen.t}</div>`:''}
+${(q.oks||[q.ok]).map(l=>`<div class="mcq-chip mcq-good">✅ ${q.ch.find(c=>c.l===l).t}</div>`).join('')}
+</div>
+</div>
+</div>`;
+});
+list.innerHTML=html;
+window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
