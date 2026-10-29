@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — Iridologie M3 | Académie ÉLYSENS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+--vert: #0C2613;
+--sauge: #9EC8B0;
+--beige: #F2EDE4;
+--or: #FFBD46;
+--noir: #1E1E1E;
+--orange: #E0732E;
+--rouge: #8C0009;
+--blanc: #FFFFFF;
+--sauge-l: #E8F4EE;
+--border: #D4C9B8;
+--muted: #6B6B5A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--beige);
+color:var(--noir);font-size:15px;min-height:100vh}
+.hdr{background:var(--vert);padding:16px 28px;display:flex;
+align-items:center;justify-content:space-between;
+position:sticky;top:0;z-index:100;
+box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.hdr-brand{display:flex;align-items:center;gap:12px}
+.hdr-logo{width:36px;height:36px;border-radius:50%;
+background:var(--or);display:flex;align-items:center;justify-content:center;
+font-family:'Cormorant Garamond',serif;font-weight:700;font-size:16px;color:var(--vert)}
+.hdr-text h1{font-family:'Cormorant Garamond',serif;font-size:17px;
+font-weight:600;color:var(--blanc);letter-spacing:.3px}
+.hdr-text p{font-size:11px;color:var(--sauge);margin-top:1px}
+.score-badge{background:var(--or);color:var(--vert);padding:6px 16px;
+border-radius:20px;font-weight:700;font-size:13px;
+font-family:'Outfit',sans-serif;min-width:85px;text-align:center;
+white-space:nowrap}
+.prog-wrap{background:var(--blanc);padding:8px 28px;
+border-bottom:1px solid var(--border);display:none}
+.prog-bar-bg{background:var(--border);border-radius:10px;height:6px;overflow:hidden}
+.prog-bar{background:linear-gradient(90deg,var(--vert),var(--sauge));
+height:100%;border-radius:10px;transition:width .4s}
+.prog-info{display:flex;justify-content:space-between;
+font-size:11px;color:var(--muted);margin-top:3px}
+main{max-width:760px;margin:0 auto;padding:28px 16px 80px}
+.screen{display:none}.screen.active{display:block}
+.card{background:var(--blanc);border-radius:14px;padding:32px;
+box-shadow:0 2px 16px rgba(12,38,19,.09)}
+.welcome-wrap{max-width:540px;margin:24px auto}
+.brand-pill{display:inline-flex;align-items:center;gap:7px;
+background:var(--vert);color:var(--blanc);padding:4px 14px;
+border-radius:20px;font-size:11px;font-weight:600;
+letter-spacing:.6px;margin-bottom:16px}
+.brand-pill span{background:var(--or);color:var(--vert);
+padding:1px 7px;border-radius:10px;font-size:10px}
+.welcome-wrap h2{font-family:'Cormorant Garamond',serif;
+font-size:28px;font-weight:700;color:var(--vert);margin-bottom:4px}
+.welcome-wrap .sub{font-size:13.5px;color:var(--muted);margin-bottom:22px}
+.instr{background:var(--sauge-l);border-left:4px solid var(--sauge);
+border-radius:0 10px 10px 0;padding:14px 16px;
+margin-bottom:18px;font-size:13.5px;line-height:1.8}
+.instr strong{color:var(--vert)}
+.instr ul{margin-left:18px;margin-top:4px}
+.instr li{margin-bottom:2px}
+.alert{border-left:4px solid var(--orange);background:#FEF6EC;
+border-radius:0 10px 10px 0;padding:12px 16px;
+font-size:13px;color:#5A2E00;margin-bottom:22px;line-height:1.6}
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:600;font-size:13px;
+color:var(--vert);margin-bottom:5px}
+.field input{width:100%;padding:10px 13px;
+border:1.5px solid var(--border);border-radius:9px;
+font-family:'Outfit',sans-serif;font-size:14px;transition:border .2s;
+background:var(--beige)}
+.field input:focus{outline:none;border-color:var(--vert);background:var(--blanc)}
+.err{color:var(--rouge);font-size:13px;margin-bottom:10px;display:none}
+.q-card{background:var(--blanc);border-radius:14px;padding:0;
+box-shadow:0 2px 14px rgba(12,38,19,.08);margin-bottom:20px;overflow:hidden}
+.q-num{display:inline-block;background:var(--vert);color:var(--blanc);
+font-size:11px;font-weight:700;padding:3px 12px;
+border-radius:10px;margin-bottom:12px;letter-spacing:.5px}
+.q-text{font-family:'Cormorant Garamond',serif;font-size:18px;
+font-weight:600;color:var(--vert);line-height:1.45;margin-bottom:22px}
+.part-label{font-size:11px;font-weight:700;letter-spacing:.7px;
+color:var(--muted);text-transform:uppercase;margin-bottom:5px}
+.part-hint{font-size:14.5px;color:var(--noir);
+margin-bottom:9px;font-style:italic}
+textarea{width:100%;min-height:105px;padding:11px 13px;
+border:1.5px solid var(--border);border-radius:9px;
+font-family:'Outfit',sans-serif;font-size:15px;
+resize:vertical;transition:border .2s;
+background:var(--beige);line-height:1.65}
+textarea:focus{outline:none;border-color:var(--vert);background:var(--blanc)}
+.autosave{font-size:11px;color:var(--muted);margin-top:3px}
+.sep{border:none;border-top:1.5px solid var(--border);margin:22px 0}
+.choice{display:flex;align-items:flex-start;gap:11px;
+padding:11px 14px;border:1.5px solid var(--border);
+border-radius:10px;margin-bottom:8px;cursor:pointer;
+transition:all .15s;background:var(--blanc);user-select:none}
+.choice:hover:not(.locked){border-color:var(--sauge);background:var(--sauge-l)}
+.choice.locked{cursor:default}
+.choice.is-correct{border-color:#2E7D32!important;background:#E8F5E9!important}
+.choice.is-wrong{border-color:var(--rouge)!important;background:#FDECEA!important}
+.choice.reveal{border-color:#2E7D32!important;background:#F1F8F1!important}
+.letter{flex-shrink:0;width:28px;height:28px;border-radius:50%;
+background:var(--beige);border:1.5px solid var(--border);
+font-weight:700;font-size:12px;display:flex;
+align-items:center;justify-content:center;
+color:var(--noir);transition:all .15s}
+.choice.is-correct .letter{background:#2E7D32;border-color:#2E7D32;color:#fff}
+.choice.is-wrong .letter{background:var(--rouge);border-color:var(--rouge);color:#fff}
+.choice.reveal .letter{background:#2E7D32;border-color:#2E7D32;color:#fff}
+.choice-text{font-size:15px;line-height:1.5;padding-top:4px;color:var(--noir)}
+.fb{padding:11px 14px;border-radius:9px;margin-top:10px;
+font-size:13.5px;font-weight:600;display:none;line-height:1.5}
+.fb.show{display:block}
+.fb.ok{background:#E8F5E9;color:#1B5E20;border-left:4px solid #2E7D32}
+.fb.ko{background:#FDECEA;color:#7F1D1D;border-left:4px solid var(--rouge)}
+.btn{display:inline-flex;align-items:center;justify-content:center;
+gap:7px;padding:11px 24px;border:none;border-radius:9px;
+font-family:'Outfit',sans-serif;font-weight:600;font-size:14px;
+cursor:pointer;transition:all .18s;letter-spacing:.2px}
+.btn-vert{background:var(--vert);color:var(--blanc)}
+.btn-vert:hover{background:#0A1E0F}
+.btn-or{background:var(--or);color:var(--vert)}
+.btn-or:hover{background:#E0A030}
+.btn-outline{background:var(--blanc);color:var(--vert);
+border:1.5px solid var(--vert)}
+.btn-outline:hover{background:var(--sauge-l)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.nav-row{display:flex;gap:10px;justify-content:space-between;
+align-items:center;flex-wrap:wrap;margin-top:20px}
+.res-wrap{max-width:580px;margin:28px auto}
+.score-ring{width:148px;height:148px;border-radius:50%;
+border:8px solid var(--vert);margin:20px auto;
+display:flex;flex-direction:column;
+align-items:center;justify-content:center;
+background:var(--sauge-l)}
+.score-pct{font-family:'Cormorant Garamond',serif;
+font-size:42px;font-weight:700;color:var(--vert)}
+.score-lbl{font-size:11px;color:var(--muted);margin-top:1px}
+.mention{font-family:'Cormorant Garamond',serif;
+font-size:22px;font-weight:600;color:var(--vert);
+margin:14px 0;text-align:center}
+.breakdown{background:var(--beige);border-radius:10px;padding:16px;
+margin:16px 0;font-size:13.5px;line-height:2.1}
+.send-st{font-size:13px;margin-top:12px;text-align:center}
+.s-wait{color:var(--muted)}.s-ok{color:#2E7D32;font-weight:600}
+.s-err{color:var(--rouge)}
+.corrige-item{background:var(--blanc);border-radius:12px;padding:22px;
+margin-bottom:16px;box-shadow:0 1px 8px rgba(12,38,19,.07)}
+.corrige-qnum{display:inline-block;font-size:11px;font-weight:700;
+letter-spacing:.5px;padding:2px 10px;border-radius:10px;
+margin-bottom:10px}
+.corrige-qnum.ok{background:#E8F5E9;color:#1B5E20}
+.corrige-qnum.ko{background:#FDECEA;color:#7F1D1D}
+.corrige-qnum.skip{background:#F5F5F5;color:#666}
+.corrige-qtxt{font-family:'Cormorant Garamond',serif;font-size:16px;
+font-weight:600;color:var(--vert);margin-bottom:14px;line-height:1.4}
+.corrige-block{margin-bottom:12px}
+.corrige-label{font-size:11px;font-weight:700;letter-spacing:.5px;
+color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.corrige-answer{background:var(--beige);border-radius:7px;padding:10px 12px;
+font-size:13.5px;line-height:1.6;color:var(--noir)}
+.corrige-mcq-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.mcq-chip{padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:600}
+.mcq-correct{background:#E8F5E9;color:#1B5E20;border:1px solid #A5D6A7}
+.mcq-wrong{background:#FDECEA;color:#7F1D1D;border:1px solid #FFCDD2}
+.mcq-good{background:#E8F5E9;color:#1B5E20;border:1.5px solid #2E7D32}
+@media print{
+.hdr,.prog-wrap,.nav-row,#btn-start,.btn{display:none!important}
+.screen{display:none!important}
+#screen-corrige{display:block!important}
+body{background:#fff;font-size:12px}
+.corrige-item{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+main{padding:10px}
+}
+.q-visual{width:100%;height:110px;overflow:hidden;border-radius:10px 10px 0 0;
+margin:-26px -26px 20px -26px;width:calc(100% + 52px)}
+.q-visual svg{width:100%;height:110px;display:block}
+.q-theme-label{display:flex;align-items:center;gap:8px;
+margin-bottom:16px;padding:6px 12px;
+background:var(--vert);border-radius:6px;
+font-size:11px;font-weight:700;letter-spacing:.6px;
+color:var(--or);text-transform:uppercase;
+width:fit-content}
+.q-card{overflow:hidden;padding-top:0}
+.q-card-inner{padding:20px 26px 26px}
+@media(max-width:600px){
+main{padding:12px 8px 70px}
+.q-card{padding:0}
+.q-card-inner{padding:14px 14px 18px}
+.card{padding:18px}
+.hdr{padding:12px 14px}
+.hdr-text h1{font-size:14px}
+.hdr-text p{font-size:10px}
+.q-text{font-size:16px}
+.choice{padding:10px 12px}
+.choice-text{font-size:14px}
+.btn{padding:12px 16px;font-size:13px}
+.nav-row{gap:8px}
+.q-visual{height:80px;margin:-0 -0 16px -0;width:100%;border-radius:10px 10px 0 0}
+.q-visual svg{height:80px}
+.welcome-wrap{margin:12px auto}
+}
+</style>
+</head>
+<body>
+<header class="hdr">
+<div class="hdr-brand">
+<div class="hdr-logo">
+<svg width="42" height="42" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg">
+<polygon points="21,2 40,21 21,40 2,21" fill="#FFBD46"/>
+<polygon points="21,4 38,21 21,38 4,21" fill="none" stroke="#0C2613" stroke-width="1" opacity=".3"/>
+<text x="13" y="24" font-family="Cormorant Garamond,serif" font-size="13" font-weight="700" fill="#0C2613" transform="rotate(-12,13,24)">A</text>
+<text x="22" y="28" font-family="Cormorant Garamond,serif" font-size="13" font-weight="700" fill="#0C2613" transform="rotate(-12,22,28)">É</text>
+</svg>
+</div>
+<div class="hdr-text">
+<h1>Académie ÉLYSENS</h1>
+<p>Iridologie — Module 3 · 40 questions</p>
+</div>
+</div>
+<div class="score-badge" id="live-score">— / 100</div>
+</header>
+<div class="prog-wrap" id="prog-wrap">
+<div class="prog-bar-bg"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+<div class="prog-info">
+<span id="prog-text">Question 1 / 40</span>
+<span id="prog-pct">0 %</span>
+</div>
+</div>
+<main>
+<div class="screen active" id="screen-welcome">
+<div class="welcome-wrap">
+<div class="card">
+<div class="brand-pill">ACADÉMIE <span>ÉLYSENS</span></div>
+<h2>Quiz de révision</h2>
+<p class="sub">Iridologie · Module 3 · Le bilan et les quatre principes de base · 40 questions</p>
+<div class="instr">
+<strong>Consignes :</strong>
+<ul>
+<li>Relisez la section correspondante dans votre cahier avant de répondre.</li>
+<li><strong>1‑A</strong> — Répondez avec vos propres mots.</li>
+<li><strong>1‑B</strong> — Sélectionnez la section où vous avez trouvé l'information.</li>
+<li>Vous pouvez quitter et reprendre à tout moment — votre progression est sauvegardée.</li>
+</ul>
+</div>
+<div class="alert">
+⚠️ <strong>Note importante :</strong> La note est calculée à partir des questions 1‑B.
+Les réponses 1‑A sont vérifiées par l'enseignant. Une réponse absente ou
+insuffisante entraîne une pénalité pouvant aller jusqu'à <strong>50 % de la note finale</strong>.
+Ces questionnaires constituent votre meilleure préparation à l'examen de fin de système.
+</div>
+<div class="field">
+<label for="inp-name">Nom complet *</label>
+<input type="text" id="inp-name" placeholder="Prénom Nom">
+</div>
+<div class="field">
+<label for="inp-email">Adresse courriel *</label>
+<input type="email" id="inp-email" placeholder="votre@courriel.com">
+</div>
+<div class="err" id="err-msg">Veuillez entrer votre nom et une adresse courriel valide.</div>
+<button class="btn btn-vert" id="btn-start" style="width:100%;padding:13px;font-size:15px">
+▶&nbsp;&nbsp;Commencer le quiz
+</button>
+</div>
+</div>
+</div>
+<div class="screen" id="screen-quiz">
+<div id="q-container"></div>
+</div>
+<div class="screen" id="screen-results">
+<div class="res-wrap">
+<div class="card" style="text-align:center">
+<div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--vert)">
+Quiz terminé !
+</div>
+<div class="score-ring">
+<div class="score-pct" id="res-pct">—</div>
+<div class="score-lbl">sur 100</div>
+</div>
+<div class="mention" id="res-mention"></div>
+<div class="breakdown" id="res-breakdown" style="text-align:left"></div>
+<div class="alert" style="text-align:left">
+⚠️ Cette note sera ajustée par l'enseignant après révision des réponses écrites (1‑A).
+Une réponse insuffisante peut entraîner une pénalité jusqu'à 50 %.
+</div>
+<div id="send-status" class="send-st s-wait">⏳ Envoi des résultats en cours…</div>
+<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+<button class="btn btn-vert" style="flex:1;min-width:180px" onclick="showCorrige()">
+📋&nbsp; Voir le corrigé complet
+</button>
+<button class="btn btn-outline" style="flex:1;min-width:180px" onclick="window.print()">
+🖨&nbsp; Imprimer / PDF
+</button>
+</div>
+<button class="btn" onclick="restartQuiz()" style="width:100%;margin-top:10px;background:#fff;color:#8C0009;border:1.5px solid #8C0009;font-family:Outfit,sans-serif;font-weight:600;font-size:14px;padding:11px;border-radius:9px;cursor:pointer">
+🔄&nbsp; Recommencer le quiz à zéro
+</button>
+</div>
+</div>
+</div>
+<div class="screen" id="screen-corrige">
+<div style="max-width:760px;margin:0 auto">
+<div class="card" style="margin-bottom:20px">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+<div>
+<div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--vert)">
+Corrigé complet — Iridologie M3
+</div>
+<div style="font-size:13px;color:var(--muted);margin-top:3px" id="corrige-info"></div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn btn-outline" style="font-size:13px;padding:8px 16px" onclick="show('screen-results')">
+← Retour aux résultats
+</button>
+<button class="btn btn-vert" style="font-size:13px;padding:8px 16px" onclick="window.print()">
+🖨 Imprimer
+</button>
+</div>
+</div>
+</div>
+<div id="corrige-list"></div>
+</div>
+</div>
+<div id="float-submit" style="display:none;position:fixed;bottom:20px;right:20px;z-index:999">
+<button onclick="soumettreMaintenant()" style="
+background:var(--orange);color:#fff;
+border:none;border-radius:30px;
+padding:13px 22px;
+font-family:Outfit,sans-serif;font-weight:700;font-size:14px;
+cursor:pointer;
+box-shadow:0 4px 16px rgba(224,115,46,.45);
+transition:all .2s">
+✔ Soumettre maintenant
+</button>
+</div>
+</main>
+<script>
+const SVGS = {
+1: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 110" preserveAspectRatio="xMidYMid slice">
+<rect width="760" height="110" fill="#0C2613"/>
+<g transform="translate(380,61) scale(0.7) translate(-380,-50)"><rect x="300" y="6" width="160" height="88" rx="4" fill="none" stroke="#9EC8B0" stroke-width="1.6" opacity=".55"/><rect x="314" y="20" width="9" height="9" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity=".6"/><line x1="330" y1="24.5" x2="400" y2="24.5" stroke="#9EC8B0" stroke-width="1.2" opacity=".4"/><rect x="314" y="36" width="9" height="9" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity=".6"/><line x1="330" y1="40.5" x2="386" y2="40.5" stroke="#9EC8B0" stroke-width="1.2" opacity=".4"/><rect x="314" y="52" width="9" height="9" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity=".6"/><line x1="330" y1="56.5" x2="400" y2="56.5" stroke="#9EC8B0" stroke-width="1.2" opacity=".4"/><rect x="314" y="68" width="9" height="9" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity=".6"/><line x1="330" y1="72.5" x2="386" y2="72.5" stroke="#9EC8B0" stroke-width="1.2" opacity=".4"/><path d="M316 23 l3 4 l6 -8" fill="none" stroke="#FFBD46" stroke-width="1.6"/><circle cx="430" cy="34" r="16" fill="none" stroke="#9EC8B0" stroke-width="1.4" opacity=".55"/><circle cx="430" cy="34" r="6" fill="#9EC8B0" opacity=".3"/><line x1="150" y1="50" x2="290" y2="50" stroke="#9EC8B0" stroke-width="1" opacity=".3"/><line x1="470" y1="50" x2="610" y2="50" stroke="#9EC8B0" stroke-width="1" opacity=".3"/></g>
+<text x="380" y="103" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="10" fill="#FFBD46" letter-spacing="2">LE BILAN COMPLET D'ANALYSE</text>
+</svg>`,
+2: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 110" preserveAspectRatio="xMidYMid slice">
+<rect width="760" height="110" fill="#0C2613"/>
+<g transform="translate(380,61) scale(0.7) translate(-380,-50)"><line x1="150" y1="50" x2="610" y2="50" stroke="#9EC8B0" stroke-width="1.4" opacity=".4"/><circle cx="170" cy="50" r="15" fill="#FFBD46" stroke="#9EC8B0" stroke-width="1.4" opacity="1"/><text x="170" y="55" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="14" font-weight="700" fill="#0C2613">1</text><circle cx="230" cy="50" r="15" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.4" opacity="0.7"/><text x="230" y="55" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="14" font-weight="700" fill="#9EC8B0">2</text><circle cx="290" cy="50" r="15" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.4" opacity="0.7"/><text x="290" y="55" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="14" font-weight="700" fill="#9EC8B0">3</text><circle cx="350" cy="50" r="15" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.4" opacity="0.7"/><text x="350" y="55" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="14" font-weight="700" fill="#9EC8B0">4</text><circle cx="410" cy="50" r="15" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.4" opacity="0.7"/><text x="410" y="55" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="14" font-weight="700" fill="#9EC8B0">5</text><circle cx="470" cy="50" r="15" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.4" opacity="0.7"/><text x="470" y="55" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="14" font-weight="700" fill="#9EC8B0">6</text><circle cx="530" cy="50" r="15" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.4" opacity="0.7"/><text x="530" y="55" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="14" font-weight="700" fill="#9EC8B0">7</text><circle cx="590" cy="50" r="15" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.4" opacity="0.7"/><text x="590" y="55" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="14" font-weight="700" fill="#9EC8B0">8</text></g>
+<text x="380" y="103" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="10" fill="#FFBD46" letter-spacing="2">LA MISE EN PRATIQUE DE LA MÉTHODE D'OBSERVATION</text>
+</svg>`,
+3: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 110" preserveAspectRatio="xMidYMid slice">
+<rect width="760" height="110" fill="#0C2613"/>
+<g transform="translate(380,61) scale(0.7) translate(-380,-50)"><line x1="300" y1="74" x2="380" y2="22" stroke="#9EC8B0" stroke-width="1.4" opacity=".45" stroke-dasharray="4 4"/><line x1="380" y1="22" x2="460" y2="74" stroke="#9EC8B0" stroke-width="1.4" opacity=".45" stroke-dasharray="4 4"/><line x1="460" y1="74" x2="300" y2="74" stroke="#9EC8B0" stroke-width="1.4" opacity=".45" stroke-dasharray="4 4"/><circle cx="300" cy="74" r="18" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.6" opacity=".7"/><circle cx="300" cy="74" r="6" fill="#9EC8B0" opacity=".7"/><circle cx="380" cy="22" r="18" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.6" opacity=".7"/><circle cx="380" cy="22" r="6" fill="#FFBD46" opacity=".7"/><circle cx="460" cy="74" r="18" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.6" opacity=".7"/><circle cx="460" cy="74" r="6" fill="#9EC8B0" opacity=".7"/></g>
+<text x="380" y="103" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="10" fill="#FFBD46" letter-spacing="2">FAIRE LES LIENS ENTRE LES SYSTÈMES</text>
+</svg>`,
+4: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 110" preserveAspectRatio="xMidYMid slice">
+<rect width="760" height="110" fill="#0C2613"/>
+<g transform="translate(380,61) scale(0.7) translate(-380,-50)"><circle cx="360" cy="50" r="42" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity="0.55"/><circle cx="360" cy="50" r="30" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity="0.35"/><circle cx="360" cy="50" r="20" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity="0.45"/><circle cx="360" cy="50" r="10" fill="none" stroke="#9EC8B0" stroke-width="1.2" opacity="0.3"/><circle cx="360" cy="50" r="7" fill="#9EC8B0" opacity=".3"/><line x1="372.0" y1="50.0" x2="400.0" y2="50.0" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="371.08655017310656" y1="54.592211369176184" x2="396.9551672436885" y2="65.30737123058728" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="368.48526579013486" y1="58.48529695831368" x2="388.2842193004494" y2="78.28432319437894" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="364.59217064597254" y1="61.086567041166" x2="375.3072354865751" y2="86.95522347055334" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="359.99995592153874" y1="61.99999999991904" x2="359.9998530717959" y2="89.99999999973015" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="355.4077479076821" y1="61.08653330489753" x2="344.69249302560706" y2="86.95511101632509" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="351.514671873622" y1="58.4852346218415" x2="331.7155729120732" y2="78.28411540613834" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="348.91341609092416" y1="54.59212992270692" x2="323.04472030308045" y2="65.30709974235639" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="348.00000000032384" y1="49.99991184307752" x2="320.0000000010794" y2="49.99970614359174" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="348.9134835634611" y1="45.40770718460239" x2="323.04494521153697" y2="34.69235728200796" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="351.51479654656634" y1="41.514640705672086" x2="331.7159884885544" y2="21.715469018906948" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="355.40791080062064" y1="38.913399223163864" x2="344.6930360020689" y2="13.044664077212879" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="360.0001322353837" y1="38.00000000072859" x2="360.0004407846124" y2="10.000000002428642" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="364.5923335384154" y1="38.91350043196928" x2="375.3077784613846" y2="13.045001439897618" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="368.4853904621633" y1="41.51482771508863" x2="388.2846348738777" y2="21.716092383628748" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><line x1="371.08661764444685" y1="45.407951524010194" x2="396.9553921481561" y2="34.69317174670065" stroke="#9EC8B0" stroke-width=".8" opacity=".25"/><circle cx="420" cy="44" r="24" fill="none" stroke="#FFBD46" stroke-width="2" opacity=".85"/><line x1="437" y1="61" x2="462" y2="86" stroke="#FFBD46" stroke-width="4" stroke-linecap="round" opacity=".85"/></g>
+<text x="380" y="103" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="10" fill="#FFBD46" letter-spacing="2">UN EXEMPLE COMPLET DE LECTURE</text>
+</svg>`,
+5: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 110" preserveAspectRatio="xMidYMid slice">
+<rect width="760" height="110" fill="#0C2613"/>
+<g transform="translate(380,61) scale(0.7) translate(-380,-50)"><line x1="150" y1="50" x2="610" y2="50" stroke="#9EC8B0" stroke-width="1" opacity=".3"/><polygon points="260,26 284,50 260,74 236,50" fill="#FFBD46" stroke="#9EC8B0" stroke-width="1.6" opacity="0.9"/><polygon points="340,26 364,50 340,74 316,50" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.6" opacity="0.65"/><polygon points="420,26 444,50 420,74 396,50" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.6" opacity="0.65"/><polygon points="500,26 524,50 500,74 476,50" fill="#0C2613" stroke="#9EC8B0" stroke-width="1.6" opacity="0.65"/></g>
+<text x="380" y="103" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="10" fill="#FFBD46" letter-spacing="2">LES QUATRE PRINCIPES DE BASE</text>
+</svg>`
+};
+
+const QTHEM = [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 5, 5];
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyOX2HALlQjJMu8ECiDV2fX3Pz-3QpPIfqzO5ghDiewQZgYUwijtfftvHvRwcrsmvQ/exec";
+const PTS = 100/40;
+const CORRECT_ANS=[
+"Aux Modules 1 et 2, tu as appris à observer les signes un par un. Ce module commence par t'apprendre à les assembler.",
+"ce que la personne vit et te partage dans ses mots, ton observation générale (sa posture, son teint, son énergie), et l'observation de l'iris.",
+"Comme un même état ne prend pas la même couleur dans un iris bleu et dans un iris brun, la fiche existe en deux versions.",
+"Cette échelle te permet surtout de comparer une rencontre à l'autre",
+"À l'équilibre, la ligne se trouve au tiers de la distance entre la pupille et le bord de l'iris, à la limite des zones 2 et 3.",
+"Quand plusieurs couleurs se superposent au même endroit, tu tiens souvent ta piste principale.",
+"Sa lecture, la sclérologie, est en soi une tout autre technique, avec sa propre carte et sa propre façon de lire les vaisseaux sanguins : elle ne fait pas partie de cette formation.",
+"Un changement réel dans le tissu de l'iris se joue sur du long terme : n'attends pas de le voir entre deux rencontres rapprochées.",
+"Il va du plus général au plus précis : d'abord le terrain (la couleur de fond), puis ce qui s'est déposé sur ce terrain, la solidité du tissu, le système nerveux, la pupille, l'estomac, et enfin les signes particuliers.",
+"Cet ordre, tu l'as déjà appliqué tout au long de tes observations aux Modules 1 et 2, et c'est lui que suit la fiche de bilan",
+"C'est la convergence des signes, puis la réponse de la personne, qui donnent du poids à ta lecture.",
+"Pour chaque signe, note quatre informations : l'iris (droit ou gauche), l'heure, la zone, et la couleur.",
+"La couleur de fond est ta règle de lecture : un même état ne prend pas la même couleur dans un iris bleu et dans un iris brun.",
+"La couleur t'oriente vers un système. La zone te situe l'organe. Les référents te font regarder les autres systèmes qui lui sont reliés.",
+"le blanc ou le jaune pâle, puis le jaune, le vert, l'orange et enfin le brun.",
+"le mot stade (aigu, subaigu, chronique, dégénératif) décrit l'état des fibres; pour une couleur déposée, on parle plutôt de son degré.",
+"Quand l'acidité augmente, le corps puiserait dans ses réserves minérales pour la neutraliser.",
+"Quand la peau élimine mal, les reins travaillent davantage; quand l'intestin est chargé, le sang ramène ses toxines aux reins.",
+"Une résistance à l'insuline ou un diabète de type 2 ne se confirme que par un bilan sanguin demandé par un médecin.",
+"La densité générale reflète la constitution : la réserve de résistance avec laquelle la personne est née et sa capacité de récupération.",
+"Un organe déficient peut tirer l'énergie à lui et affaiblir la ligne à son heure; un organe sous tension peut au contraire augmenter le stress sur la ligne.",
+"la ligne du SNA (son étage), la zone de la colonne sur le cadran (D 3 h 30 à 4 h 25, G 7 h 10 à 8 h 25) et la pupille.",
+"Un estomac qui manque d'acide digère moins bien les protéines, qui forment la trame des os sur laquelle se fixent les minéraux, et absorbe moins bien les minéraux et la vitamine B12.",
+"pour retrouver ceux qui n'auraient pas encore été notés, et tout autre symbole que les étapes précédentes n'ont pas nommé.",
+"Une question ouverte bien posée ne contient pas la réponse et n'annonce pas de conclusion.",
+"L'assimilation : zones 1 et 2; l'utilisation : zones 3, 4 et 5; l'élimination : zones 6 et 7.",
+"Lorsqu'une voie d'élimination ralentit, les autres prennent le relais, jusqu'à ce que les toxines se déposent dans les tissus les plus faibles.",
+"Lorsque les poches de l'intestin s'éclaircissent, les zones foncées du reste de l'iris s'éclaircissent avec elles.",
+"pour avoir un sang propre, il faut un estomac sain et un intestin propre.",
+"Le foie reçoit tout ce que l'intestin absorbe; on ne peut pas avoir un intestin chargé et un sang propre",
+"Une observation isolée reste une piste. Elle devient solide lorsque plusieurs repères pointent dans la même direction.",
+"L'élimination ressort le plus souvent, avec quatre repères qui convergent vers les reins : la couleur, le tissu, la ligne du SNA et les voies d'élimination.",
+"un estomac qui manque d'acide et un intestin distendu laisseraient plus de résidus et absorberaient moins de minéraux.",
+"Comme elle n'a pas fait de bilan sanguin depuis plusieurs années, tu l'invites à en parler à son médecin, en particulier pour son taux de sucre et sa fatigue.",
+"l'innervation, l'intégrité du sang et de la lymphe, la circulation et le repos.",
+"lorsqu'on améliore l'un d'eux, le fonctionnement des trois autres s'en trouve habituellement rehaussé.",
+"Une bonne innervation est la première priorité du corps",
+"Coupée, l'influx nerveux ne se rendrait pas à l'organe situé à cet endroit.",
+"La lymphe, elle, est incolore et ne contient pas de globules rouges",
+"le métabolisme ralentit, ce qui favorise la restauration des tissus; le système nerveux organise et harmonise le fonctionnement des organes, des glandes et des tissus; et l'apport de sang aux régions à réparer n'est plus détourné vers les muscles"
+];
+const QS=[
+{"id":1,"q":"Pourquoi le module commence-t-il par le bilan?","ok":"B","ch":[{"l":"A","t":"3.5.6 Le repos"},{"l":"B","t":"3.1.2 À quoi sert le bilan"},{"l":"C","t":"3.1.9 Le suivi dans le temps"},{"l":"D","t":"3.3.5 L'utilisation : les organes, les glandes, la structure et les nerfs"},{"l":"E","t":"3.1.7 Le blanc de l'œil : une autre technique"}]},
+{"id":2,"q":"Quelles trois sources d'information le bilan réunit-il?","ok":"C","ch":[{"l":"A","t":"3.3.5 L'utilisation : les organes, les glandes, la structure et les nerfs"},{"l":"B","t":"3.1.3 La structure de la fiche"},{"l":"C","t":"3.1.2 À quoi sert le bilan"},{"l":"D","t":"3.4.3 La lecture, étape par étape"},{"l":"E","t":"3.1.9 Le suivi dans le temps"}]},
+{"id":3,"q":"Pourquoi la fiche de bilan existe-t-elle en deux versions?","ok":"E","ch":[{"l":"A","t":"3.1.5 Les échelles à cocher"},{"l":"B","t":"3.1.3 La structure de la fiche"},{"l":"C","t":"3.2.6 Étape 3 : les fibres, leur densité et leur état"},{"l":"D","t":"3.4.4 Relier : ce que la lecture retient"},{"l":"E","t":"3.1.4 Deux versions de la fiche : l'iris bleu et l'iris brun"}]},
+{"id":4,"q":"À quoi sert surtout l'échelle de 0 à 100 %?","ok":"C","ch":[{"l":"A","t":"3.1.10 La fiche de bilan, iris bleu, avec les instructions"},{"l":"B","t":"3.1.8 Des observations aux priorités d'accompagnement"},{"l":"C","t":"3.1.5 Les échelles à cocher"},{"l":"D","t":"3.5.3 L'innervation, la première priorité"},{"l":"E","t":"3.4.4 Relier : ce que la lecture retient"}]},
+{"id":5,"q":"Où se trouve la ligne du SNA à l'équilibre?","ok":"A","ch":[{"l":"A","t":"3.1.5 Les échelles à cocher"},{"l":"B","t":"3.1.6 Les images et le code de couleurs"},{"l":"C","t":"3.1.4 Deux versions de la fiche : l'iris bleu et l'iris brun"},{"l":"D","t":"3.3.2 Les trois grandes fonctions de l'iris"},{"l":"E","t":"3.3.5 L'utilisation : les organes, les glandes, la structure et les nerfs"}]},
+{"id":6,"q":"Que t'indique la carte coloriée quand plusieurs couleurs se superposent au même endroit?","ok":"B","ch":[{"l":"A","t":"3.1.9 Le suivi dans le temps"},{"l":"B","t":"3.1.6 Les images et le code de couleurs"},{"l":"C","t":"3.1.3 La structure de la fiche"},{"l":"D","t":"3.3.7 Quand une piste devient solide"},{"l":"E","t":"3.5.6 Le repos"}]},
+{"id":7,"q":"Pourquoi n'interprètes-tu pas ce que tu observes dans le blanc de l'œil?","ok":"C","ch":[{"l":"A","t":"3.1.5 Les échelles à cocher"},{"l":"B","t":"3.1.9 Le suivi dans le temps"},{"l":"C","t":"3.1.7 Le blanc de l'œil : une autre technique"},{"l":"D","t":"3.2.2 Pourquoi une récapitulation"},{"l":"E","t":"3.5.7 Mettre les quatre principes en pratique"}]},
+{"id":8,"q":"Lorsque tu compares tes fiches de suivi, peux-tu t'attendre à voir un changement dans le tissu de l'iris entre deux rencontres rapprochées?","ok":"D","ch":[{"l":"A","t":"3.4.6 Vers les priorités d'accompagnement"},{"l":"B","t":"3.1.7 Le blanc de l'œil : une autre technique"},{"l":"C","t":"3.5.4 L'intégrité du sang et de la lymphe"},{"l":"D","t":"3.1.9 Le suivi dans le temps"},{"l":"E","t":"3.1.2 À quoi sert le bilan"}]},
+{"id":9,"q":"Dans quel ordre la méthode d'observation te fait-elle lire l'iris?","ok":"A","ch":[{"l":"A","t":"3.2.2 Pourquoi une récapitulation"},{"l":"B","t":"3.3.6 L'élimination : la lymphe, la circulation, la peau et leurs relais"},{"l":"C","t":"3.4.2 La personne et la raison de la rencontre"},{"l":"D","t":"3.2.6 Étape 3 : les fibres, leur densité et leur état"},{"l":"E","t":"3.2.11 Étape 8 : retrouver les signes oubliés, relier et poser les bonnes questions"}]},
+{"id":10,"q":"Pourquoi la méthode en huit étapes est-elle présentée dans ce module comme une récapitulation?","ok":"C","ch":[{"l":"A","t":"3.3.5 L'utilisation : les organes, les glandes, la structure et les nerfs"},{"l":"B","t":"3.4.5 Les questions posées à Madame L."},{"l":"C","t":"3.2.2 Pourquoi une récapitulation"},{"l":"D","t":"3.2.5 Étape 2 : les colorations déposées, zone par zone"},{"l":"E","t":"3.2.9 Étape 6 : le contour de la pupille et la zone de l'estomac"}]},
+{"id":11,"q":"Qu'est-ce qui donne du poids à ta lecture?","ok":"A","ch":[{"l":"A","t":"3.2.2 Pourquoi une récapitulation"},{"l":"B","t":"3.2.7 Étape 4 : la ligne du SNA, sa position, sa couleur et sa forme"},{"l":"C","t":"3.1.5 Les échelles à cocher"},{"l":"D","t":"3.2.11 Étape 8 : retrouver les signes oubliés, relier et poser les bonnes questions"},{"l":"E","t":"3.1.7 Le blanc de l'œil : une autre technique"}]},
+{"id":12,"q":"Quelles quatre informations notes-tu pour chaque signe?","ok":"D","ch":[{"l":"A","t":"3.5.6 Le repos"},{"l":"B","t":"3.2.2 Pourquoi une récapitulation"},{"l":"C","t":"3.2.6 Étape 3 : les fibres, leur densité et leur état"},{"l":"D","t":"3.2.3 Préparer l'observation"},{"l":"E","t":"3.5.7 Mettre les quatre principes en pratique"}]},
+{"id":13,"q":"Pourquoi la couleur de fond est-elle toujours la première étape?","ok":"E","ch":[{"l":"A","t":"3.2.6 Étape 3 : les fibres, leur densité et leur état"},{"l":"B","t":"3.5.6 Le repos"},{"l":"C","t":"3.2.11 Étape 8 : retrouver les signes oubliés, relier et poser les bonnes questions"},{"l":"D","t":"3.1.6 Les images et le code de couleurs"},{"l":"E","t":"3.2.4 Étape 1 : la couleur de fond, bleue ou brune"}]},
+{"id":14,"q":"Quelle démarche en trois temps suis-tu devant une couleur déposée?","ok":"C","ch":[{"l":"A","t":"3.1.3 La structure de la fiche"},{"l":"B","t":"3.2.3 Préparer l'observation"},{"l":"C","t":"3.2.5 Étape 2 : les colorations déposées, zone par zone"},{"l":"D","t":"3.2.6 Étape 3 : les fibres, leur densité et leur état"},{"l":"E","t":"3.1.9 Le suivi dans le temps"}]},
+{"id":15,"q":"Dans quel ordre se suivent les couleurs déposées, du dépôt le plus léger au plus avancé?","ok":"D","ch":[{"l":"A","t":"3.2.4 Étape 1 : la couleur de fond, bleue ou brune"},{"l":"B","t":"3.2.3 Préparer l'observation"},{"l":"C","t":"3.5.2 Un système global"},{"l":"D","t":"3.2.5 Étape 2 : les colorations déposées, zone par zone"},{"l":"E","t":"3.1.7 Le blanc de l'œil : une autre technique"}]},
+{"id":16,"q":"Le mot stade s'applique-t-il aux couleurs déposées?","ok":"E","ch":[{"l":"A","t":"3.5.3 L'innervation, la première priorité"},{"l":"B","t":"3.2.8 Étape 5 : la pupille, sa rondeur et ses corrélations"},{"l":"C","t":"3.1.6 Les images et le code de couleurs"},{"l":"D","t":"3.2.11 Étape 8 : retrouver les signes oubliés, relier et poser les bonnes questions"},{"l":"E","t":"3.2.5 Étape 2 : les colorations déposées, zone par zone"}]},
+{"id":17,"q":"Pourquoi une zone blanche ou jaune clair t'invite-t-elle à vérifier toute la structure?","ok":"A","ch":[{"l":"A","t":"3.2.5 Étape 2 : les colorations déposées, zone par zone"},{"l":"B","t":"3.3.3 Trois principes pour relier les signes"},{"l":"C","t":"3.2.8 Étape 5 : la pupille, sa rondeur et ses corrélations"},{"l":"D","t":"3.2.6 Étape 3 : les fibres, leur densité et leur état"},{"l":"E","t":"3.3.6 L'élimination : la lymphe, la circulation, la peau et leurs relais"}]},
+{"id":18,"q":"Le jaune orienterait vers les reins et l'acide urique. Pourquoi t'invite-t-il aussi à vérifier l'intestin et la peau?","ok":"E","ch":[{"l":"A","t":"3.3.4 L'assimilation : l'estomac et l'intestin"},{"l":"B","t":"3.2.10 Étape 7 : les signes qui restent à identifier"},{"l":"C","t":"3.2.7 Étape 4 : la ligne du SNA, sa position, sa couleur et sa forme"},{"l":"D","t":"3.5.7 Mettre les quatre principes en pratique"},{"l":"E","t":"3.2.5 Étape 2 : les colorations déposées, zone par zone"}]},
+{"id":19,"q":"Une coloration orangée permet-elle de confirmer une résistance à l'insuline ou un diabète de type 2?","ok":"D","ch":[{"l":"A","t":"3.1.3 La structure de la fiche"},{"l":"B","t":"3.2.11 Étape 8 : retrouver les signes oubliés, relier et poser les bonnes questions"},{"l":"C","t":"3.2.8 Étape 5 : la pupille, sa rondeur et ses corrélations"},{"l":"D","t":"3.2.5 Étape 2 : les colorations déposées, zone par zone"},{"l":"E","t":"3.5.4 L'intégrité du sang et de la lymphe"}]},
+{"id":20,"q":"Que reflète la densité générale des fibres?","ok":"C","ch":[{"l":"A","t":"3.2.4 Étape 1 : la couleur de fond, bleue ou brune"},{"l":"B","t":"3.5.5 La circulation"},{"l":"C","t":"3.2.6 Étape 3 : les fibres, leur densité et leur état"},{"l":"D","t":"3.2.11 Étape 8 : retrouver les signes oubliés, relier et poser les bonnes questions"},{"l":"E","t":"3.1.6 Les images et le code de couleurs"}]},
+{"id":21,"q":"Le lien entre la ligne du SNA et les organes ne va-t-il que dans un sens?","ok":"D","ch":[{"l":"A","t":"3.2.6 Étape 3 : les fibres, leur densité et leur état"},{"l":"B","t":"3.2.10 Étape 7 : les signes qui restent à identifier"},{"l":"C","t":"3.1.10 La fiche de bilan, iris bleu, avec les instructions"},{"l":"D","t":"3.2.7 Étape 4 : la ligne du SNA, sa position, sa couleur et sa forme"},{"l":"E","t":"3.5.7 Mettre les quatre principes en pratique"}]},
+{"id":22,"q":"Quelles sont les trois lectures de la colonne que tu compares à l'étape 5?","ok":"E","ch":[{"l":"A","t":"3.2.5 Étape 2 : les colorations déposées, zone par zone"},{"l":"B","t":"3.5.3 L'innervation, la première priorité"},{"l":"C","t":"3.2.3 Préparer l'observation"},{"l":"D","t":"3.3.5 L'utilisation : les organes, les glandes, la structure et les nerfs"},{"l":"E","t":"3.2.8 Étape 5 : la pupille, sa rondeur et ses corrélations"}]},
+{"id":23,"q":"Que t'apprend un estomac qui manque d'acide sur la structure et les minéraux?","ok":"D","ch":[{"l":"A","t":"3.1.4 Deux versions de la fiche : l'iris bleu et l'iris brun"},{"l":"B","t":"3.2.11 Étape 8 : retrouver les signes oubliés, relier et poser les bonnes questions"},{"l":"C","t":"3.1.2 À quoi sert le bilan"},{"l":"D","t":"3.2.9 Étape 6 : le contour de la pupille et la zone de l'estomac"},{"l":"E","t":"3.2.6 Étape 3 : les fibres, leur densité et leur état"}]},
+{"id":24,"q":"Pourquoi fais-tu un dernier tour de l'iris à l'étape 8?","ok":"B","ch":[{"l":"A","t":"3.2.8 Étape 5 : la pupille, sa rondeur et ses corrélations"},{"l":"B","t":"3.2.11 Étape 8 : retrouver les signes oubliés, relier et poser les bonnes questions"},{"l":"C","t":"3.2.5 Étape 2 : les colorations déposées, zone par zone"},{"l":"D","t":"3.3.6 L'élimination : la lymphe, la circulation, la peau et leurs relais"},{"l":"E","t":"3.3.4 L'assimilation : l'estomac et l'intestin"}]},
+{"id":25,"q":"Qu'est-ce qu'une question ouverte bien posée?","ok":"E","ch":[{"l":"A","t":"3.1.4 Deux versions de la fiche : l'iris bleu et l'iris brun"},{"l":"B","t":"3.2.7 Étape 4 : la ligne du SNA, sa position, sa couleur et sa forme"},{"l":"C","t":"3.1.3 La structure de la fiche"},{"l":"D","t":"3.2.5 Étape 2 : les colorations déposées, zone par zone"},{"l":"E","t":"3.2.11 Étape 8 : retrouver les signes oubliés, relier et poser les bonnes questions"}]},
+{"id":26,"q":"Quelles sont les trois grandes fonctions de l'iris, et leurs zones?","ok":"C","ch":[{"l":"A","t":"3.3.7 Quand une piste devient solide"},{"l":"B","t":"3.5.6 Le repos"},{"l":"C","t":"3.3.2 Les trois grandes fonctions de l'iris"},{"l":"D","t":"3.2.9 Étape 6 : le contour de la pupille et la zone de l'estomac"},{"l":"E","t":"3.3.4 L'assimilation : l'estomac et l'intestin"}]},
+{"id":27,"q":"Que se passe-t-il lorsqu'une voie d'élimination ralentit?","ok":"B","ch":[{"l":"A","t":"3.2.9 Étape 6 : le contour de la pupille et la zone de l'estomac"},{"l":"B","t":"3.3.3 Trois principes pour relier les signes"},{"l":"C","t":"3.3.5 L'utilisation : les organes, les glandes, la structure et les nerfs"},{"l":"D","t":"3.5.4 L'intégrité du sang et de la lymphe"},{"l":"E","t":"3.3.7 Quand une piste devient solide"}]},
+{"id":28,"q":"Selon le troisième principe pour relier les signes, que se passe-t-il dans le reste de l'iris lorsque les poches de l'intestin s'éclaircissent?","ok":"E","ch":[{"l":"A","t":"3.3.2 Les trois grandes fonctions de l'iris"},{"l":"B","t":"3.3.5 L'utilisation : les organes, les glandes, la structure et les nerfs"},{"l":"C","t":"3.4.2 La personne et la raison de la rencontre"},{"l":"D","t":"3.1.2 À quoi sert le bilan"},{"l":"E","t":"3.3.3 Trois principes pour relier les signes"}]},
+{"id":29,"q":"Que faut-il pour avoir un sang propre?","ok":"A","ch":[{"l":"A","t":"3.3.4 L'assimilation : l'estomac et l'intestin"},{"l":"B","t":"3.3.2 Les trois grandes fonctions de l'iris"},{"l":"C","t":"3.3.5 L'utilisation : les organes, les glandes, la structure et les nerfs"},{"l":"D","t":"3.2.7 Étape 4 : la ligne du SNA, sa position, sa couleur et sa forme"},{"l":"E","t":"3.2.10 Étape 7 : les signes qui restent à identifier"}]},
+{"id":30,"q":"Un voile ou une zone brune t'oriente vers le foie. Pourquoi dois-tu aussi vérifier l'intestin?","ok":"C","ch":[{"l":"A","t":"3.1.3 La structure de la fiche"},{"l":"B","t":"3.2.9 Étape 6 : le contour de la pupille et la zone de l'estomac"},{"l":"C","t":"3.3.6 L'élimination : la lymphe, la circulation, la peau et leurs relais"},{"l":"D","t":"3.3.7 Quand une piste devient solide"},{"l":"E","t":"3.3.4 L'assimilation : l'estomac et l'intestin"}]},
+{"id":31,"q":"Quand une piste devient-elle solide?","ok":"E","ch":[{"l":"A","t":"3.3.5 L'utilisation : les organes, les glandes, la structure et les nerfs"},{"l":"B","t":"3.3.2 Les trois grandes fonctions de l'iris"},{"l":"C","t":"3.4.6 Vers les priorités d'accompagnement"},{"l":"D","t":"3.1.10 La fiche de bilan, iris bleu, avec les instructions"},{"l":"E","t":"3.3.7 Quand une piste devient solide"}]},
+{"id":32,"q":"Dans l'exemple de Madame L., quelle fonction ressort comme piste principale?","ok":"A","ch":[{"l":"A","t":"3.4.4 Relier : ce que la lecture retient"},{"l":"B","t":"3.2.2 Pourquoi une récapitulation"},{"l":"C","t":"3.4.2 La personne et la raison de la rencontre"},{"l":"D","t":"3.4.3 La lecture, étape par étape"},{"l":"E","t":"3.2.11 Étape 8 : retrouver les signes oubliés, relier et poser les bonnes questions"}]},
+{"id":33,"q":"Comment l'assimilation alimente-t-elle la piste principale de Madame L.?","ok":"B","ch":[{"l":"A","t":"3.3.4 L'assimilation : l'estomac et l'intestin"},{"l":"B","t":"3.4.4 Relier : ce que la lecture retient"},{"l":"C","t":"3.4.6 Vers les priorités d'accompagnement"},{"l":"D","t":"3.4.5 Les questions posées à Madame L."},{"l":"E","t":"3.2.5 Étape 2 : les colorations déposées, zone par zone"}]},
+{"id":34,"q":"Pourquoi invites-tu Madame L. à parler à son médecin?","ok":"D","ch":[{"l":"A","t":"3.4.2 La personne et la raison de la rencontre"},{"l":"B","t":"3.2.9 Étape 6 : le contour de la pupille et la zone de l'estomac"},{"l":"C","t":"3.4.3 La lecture, étape par étape"},{"l":"D","t":"3.4.5 Les questions posées à Madame L."},{"l":"E","t":"3.3.5 L'utilisation : les organes, les glandes, la structure et les nerfs"}]},
+{"id":35,"q":"Quels sont les quatre principes de base qui soutiennent la vitalité?","ok":"B","ch":[{"l":"A","t":"3.5.4 L'intégrité du sang et de la lymphe"},{"l":"B","t":"3.5.2 Un système global"},{"l":"C","t":"3.3.7 Quand une piste devient solide"},{"l":"D","t":"3.5.7 Mettre les quatre principes en pratique"},{"l":"E","t":"3.2.10 Étape 7 : les signes qui restent à identifier"}]},
+{"id":36,"q":"Pourquoi dit-on que les quatre principes sont interdépendants?","ok":"D","ch":[{"l":"A","t":"3.5.5 La circulation"},{"l":"B","t":"3.2.6 Étape 3 : les fibres, leur densité et leur état"},{"l":"C","t":"3.3.5 L'utilisation : les organes, les glandes, la structure et les nerfs"},{"l":"D","t":"3.5.2 Un système global"},{"l":"E","t":"3.5.4 L'intégrité du sang et de la lymphe"}]},
+{"id":37,"q":"Quelle est la première priorité du corps?","ok":"A","ch":[{"l":"A","t":"3.5.3 L'innervation, la première priorité"},{"l":"B","t":"3.5.2 Un système global"},{"l":"C","t":"3.3.5 L'utilisation : les organes, les glandes, la structure et les nerfs"},{"l":"D","t":"3.5.6 Le repos"},{"l":"E","t":"3.2.11 Étape 8 : retrouver les signes oubliés, relier et poser les bonnes questions"}]},
+{"id":38,"q":"Qu'arrive-t-il à l'organe situé à l'endroit où la ligne du SNA est coupée?","ok":"B","ch":[{"l":"A","t":"3.5.4 L'intégrité du sang et de la lymphe"},{"l":"B","t":"3.5.3 L'innervation, la première priorité"},{"l":"C","t":"3.5.5 La circulation"},{"l":"D","t":"3.3.3 Trois principes pour relier les signes"},{"l":"E","t":"3.4.5 Les questions posées à Madame L."}]},
+{"id":39,"q":"En quoi la lymphe se distingue-t-elle du sang?","ok":"A","ch":[{"l":"A","t":"3.5.4 L'intégrité du sang et de la lymphe"},{"l":"B","t":"3.1.4 Deux versions de la fiche : l'iris bleu et l'iris brun"},{"l":"C","t":"3.5.3 L'innervation, la première priorité"},{"l":"D","t":"3.5.2 Un système global"},{"l":"E","t":"3.2.6 Étape 3 : les fibres, leur densité et leur état"}]},
+{"id":40,"q":"Quels trois phénomènes se produisent pendant le repos?","ok":"B","ch":[{"l":"A","t":"3.5.2 Un système global"},{"l":"B","t":"3.5.6 Le repos"},{"l":"C","t":"3.1.3 La structure de la fiche"},{"l":"D","t":"3.3.2 Les trois grandes fonctions de l'iris"},{"l":"E","t":"3.5.3 L'innervation, la première priorité"}]}
+];
+
+const LS="elysens_quiz_irido_m3_v1";
+let S={name:"",email:"",cur:0,done:false,score:0,
+ans:Array(40).fill(0).map(()=>({txt:"",mcq:null,ok:false}))};
+function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+function load(){try{const d=localStorage.getItem(LS);if(d){S=JSON.parse(d);return true}}catch(e){}return false}
+function reset(){localStorage.removeItem(LS);S={name:"",email:"",cur:0,done:false,score:0,ans:Array(40).fill(0).map(()=>({txt:"",mcq:null,ok:false}))}}
+function show(id){
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+document.getElementById("prog-wrap").style.display=id==="screen-quiz"?"block":"none";
+document.getElementById("float-submit").style.display=id==="screen-quiz"?"block":"none";
+}
+document.addEventListener("DOMContentLoaded",()=>{
+document.getElementById("btn-start").addEventListener("click",startQuiz);
+if(load()&&S.name&&!S.done){
+if(confirm("Quiz en cours trouvé pour "+S.name+".\n\nReprendre à la question "+(S.cur+1)+" ?\n\n(Annuler = recommencer à zéro)")){
+show("screen-quiz");liveScore();render();
+}else{reset();}
+}
+if(S.done){showResults();}
+});
+function startQuiz(){
+const n=document.getElementById("inp-name").value.trim();
+const e=document.getElementById("inp-email").value.trim();
+const err=document.getElementById("err-msg");
+if(!n||!e||!e.includes("@")){err.style.display="block";return;}
+err.style.display="none";
+S.name=n;S.email=e;save();
+show("screen-quiz");liveScore();render();
+}
+function render(){
+const i=S.cur,q=QS[i],ans=S.ans[i],locked=ans.mcq!==null;
+const pct=Math.round(i/40*100);
+document.getElementById("prog-bar").style.width=pct+"%";
+document.getElementById("prog-text").textContent="Question "+(i+1)+" / 40";
+document.getElementById("prog-pct").textContent=pct+" %";
+let ch="";
+const validAnswers = q.oks || [q.ok];
+q.ch.forEach(c=>{
+let cls="choice";
+if(locked){
+cls+=" locked";
+if(validAnswers.includes(c.l))cls+=" is-correct";
+else if(c.l===ans.mcq && !ans.ok)cls+=" is-wrong";
+}
+ch+=`<div class="${cls}" data-letter="${c.l}"><div class="letter">${c.l}</div><div class="choice-text">${c.t}</div></div>`;
+});
+let fb="";
+if(locked){
+const validAnsList = q.oks || [q.ok];
+const sectList = validAnsList.map(l=>q.ch.find(c=>c.l===l).t).join(" — ou — ");
+const cAns=CORRECT_ANS[i];
+fb=ans.ok
+?`<div class="fb ok show">✅ Bonne réponse ! Section : <strong>${sectList}</strong><br><span style="font-weight:400;font-size:13px;display:block;margin-top:6px;opacity:.9">📖 Réponse attendue : ${cAns}</span></div>`
+:`<div class="fb ko show">❌ La bonne réponse est : <strong>${sectList}</strong><br><span style="font-weight:400;font-size:13px;display:block;margin-top:6px;opacity:.9">📖 Réponse attendue : ${cAns}</span></div>`;
+}
+const isLast=i===39;
+const nxt=isLast
+?`<button class="btn btn-or" id="btn-next" ${!locked?"disabled":""} onclick="finish()">Terminer le quiz ✓</button>`
+:`<button class="btn btn-vert" id="btn-next" ${!locked?"disabled":""} onclick="goTo(${i+1})">Suivant →</button>`;
+const themeNum = QTHEM[i];
+const themeSvg = SVGS[themeNum] || "";
+document.getElementById("q-container").innerHTML=`
+<div class="q-card">
+<div class="q-visual">${themeSvg}</div>
+<div class="q-card-inner">
+<div class="q-num">QUESTION ${i+1} / 40</div>
+<div class="q-text">${q.q}</div>
+<div class="part-label">1 — A &nbsp;·&nbsp; Réponse à développement</div>
+<div class="part-hint">Consultez votre cahier et répondez avec vos propres mots :</div>
+<textarea id="ta" placeholder="Écrivez votre réponse ici…" ${locked?"disabled":""}>${ans.txt}</textarea>
+<div class="autosave">${locked?"🔒 Réponse verrouillée après le choix de section (1‑B)":"💾 Sauvegarde automatique à chaque frappe"}</div>
+<hr class="sep">
+<div class="part-label">1 — B &nbsp;·&nbsp; Section du cahier</div>
+<div class="part-hint">Dans quelle section avez-vous trouvé cette information ?</div>
+<div id="cw">${ch}</div>
+${fb}
+<div class="nav-row">
+<button class="btn btn-outline" onclick="goTo(${i-1})" ${i===0?"disabled":""}>← Précédent</button>
+<span style="font-size:13px;color:var(--muted)">Score : <strong>${Math.round(S.score)}</strong> / 100</span>
+${nxt}
+</div>
+</div>
+</div>`;
+document.getElementById("ta").addEventListener("input",e=>{S.ans[S.cur].txt=e.target.value;save();});
+if(!locked){
+document.getElementById("cw").addEventListener("click",e=>{
+const el=e.target.closest(".choice");
+if(!el)return;
+pick(el.dataset.letter);
+});
+}
+window.scrollTo(0,0);
+}
+function pick(letter){
+const i=S.cur,q=QS[i],ans=S.ans[i];
+if(ans.mcq!==null)return;
+const ta=document.getElementById("ta");
+if(ta)ans.txt=ta.value;
+ans.mcq=letter;
+const validAnswers = q.oks || [q.ok];
+ans.ok = validAnswers.includes(letter);
+if(ans.ok)S.score=Math.min(100,S.score+PTS);
+save();liveScore();render();
+}
+function goTo(idx){
+const ta=document.getElementById("ta");
+if(ta)S.ans[S.cur].txt=ta.value;
+save();
+if(idx<0||idx>=40)return;
+S.cur=idx;save();render();
+}
+function liveScore(){
+document.getElementById("live-score").textContent=Math.round(S.score)+" / 100";
+}
+function soumettreMaintenant(){
+if(confirm("Soumettre le quiz maintenant ? Les questions non répondues compteront comme incorrectes.")){
+const ta=document.getElementById("ta");
+if(ta)S.ans[S.cur].txt=ta.value;
+S.done=true;save();showResults();send();
+}
+}
+function finish(){
+const ta=document.getElementById("ta");
+if(ta)S.ans[S.cur].txt=ta.value;
+S.done=true;save();showResults();send();
+}
+function showResults(){
+show("screen-results");
+const pct=Math.round(S.score);
+const correct=S.ans.filter(a=>a.ok).length;
+const withTxt=S.ans.filter(a=>a.txt.trim().length>15).length;
+document.getElementById("res-pct").textContent=pct+" %";
+document.getElementById("live-score").textContent=pct+" / 100";
+const ms=[[90,"🏆 Excellent !"],[80,"🌟 Très bien"],[70,"👍 Bien"],[60,"📖 Passable"],[0,"⚠️ À revoir"]];
+document.getElementById("res-mention").textContent=ms.find(m=>pct>=m[0])[1];
+document.getElementById("res-breakdown").innerHTML=`
+<strong>Résumé</strong><br>
+📊 Score QCM (1‑B) : <strong>${pct} / 100</strong><br>
+✅ Bonnes réponses : <strong>${correct} / 40</strong><br>
+✍️ Réponses écrites (1‑A) : <strong>${withTxt} / 40</strong> complétées<br>
+👤 ${S.name}<br>📧 ${S.email}<br>
+📅 ${new Date().toLocaleDateString("fr-CA",{day:"2-digit",month:"long",year:"numeric"})}`;
+}
+function restartQuiz(){
+if(confirm("Recommencer le quiz ? Toute votre progression sera effacée.")){
+reset();
+document.getElementById("inp-name").value="";
+document.getElementById("inp-email").value="";
+document.getElementById("live-score").textContent="— / 100";
+show("screen-welcome");
+}
+}
+function send(){
+const el=document.getElementById("send-status");
+if(SCRIPT_URL==="REPLACE_WITH_GOOGLE_SCRIPT_URL"){
+el.className="send-st s-err";
+el.textContent="⚙️ URL Google Apps Script non configurée.";
+return;
+}
+const timeout = setTimeout(()=>{
+el.className="send-st s-ok";
+el.textContent="✅ Résultats transmis. Vérifiez votre Google Sheet.";
+}, 12000);
+const payload = JSON.stringify({
+module:"Iridologie M3", nom:S.name, courriel:S.email,
+date:new Date().toISOString(),
+score:Math.round(S.score),
+reponses:S.ans.map((a,i)=>({q:i+1,texte:a.txt,choix:a.mcq,correct:a.ok}))
+});
+fetch(SCRIPT_URL,{
+method:"POST",
+mode:"no-cors",
+headers:{"Content-Type":"text/plain"},
+body:payload
+})
+.then(()=>{
+clearTimeout(timeout);
+el.className="send-st s-ok";
+el.textContent="✅ Résultats transmis à l'enseignant.";
+})
+.catch(()=>{
+clearTimeout(timeout);
+el.className="send-st s-err";
+el.textContent="❌ Erreur d'envoi — contactez votre enseignant.";
+});
+}
+function showCorrige(){
+show("screen-corrige");
+const info=document.getElementById("corrige-info");
+info.textContent=S.name+" · "+S.email+" · Score : "+Math.round(S.score)+" / 100 · "+
+new Date().toLocaleDateString("fr-CA",{day:"2-digit",month:"long",year:"numeric"});
+const list=document.getElementById("corrige-list");
+let html="";
+QS.forEach((q,i)=>{
+const ans=S.ans[i];
+const locked=ans.mcq!==null;
+const correct=q.ch.find(c=>c.l===q.ok);
+const chosen=ans.mcq?q.ch.find(c=>c.l===ans.mcq):null;
+let status="skip",statusTxt="Non répondue";
+if(locked){status=ans.ok?"ok":"ko";statusTxt=ans.ok?"✅ Correcte":"❌ Incorrecte";}
+html+=`
+<div class="corrige-item">
+<div class="corrige-qnum ${status}">${statusTxt} — Question ${i+1}/40</div>
+<div class="corrige-qtxt">${q.q}</div>
+<div class="corrige-block">
+<div class="corrige-label">1 — A · Réponse développement</div>
+<div class="corrige-answer">${ans.txt.trim()||'<em style="color:var(--muted)">Aucune réponse écrite</em>'}</div>
+</div>
+<div class="corrige-block">
+<div class="corrige-label">✅ Bonne réponse — Corrigé</div>
+<div class="corrige-answer" style="border-left:3px solid #2E7D32;background:#E8F5E9;color:#1B5E20">${CORRECT_ANS[i]}</div>
+</div>
+<div class="corrige-block">
+<div class="corrige-label">1 — B · Section du cahier</div>
+<div class="corrige-mcq-row">
+${chosen && !ans.ok?`<div class="mcq-chip mcq-wrong">❌ Votre choix : ${chosen.t}</div>`:''}
+${(q.oks||[q.ok]).map(l=>`<div class="mcq-chip mcq-good">✅ ${q.ch.find(c=>c.l===l).t}</div>`).join('')}
+</div>
+</div>
+</div>`;
+});
+list.innerHTML=html;
+window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
